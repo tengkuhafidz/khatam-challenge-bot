@@ -26,11 +26,12 @@ export const savePagesReadIncrement = async (ctx: Context) => {
         return
     }
 
-    const pagesRead = Number(pagesReadStr)
-    await DbQueries.savePagesReadIncrement(chatId!, userId!, pagesRead)
+    const inputPagesRead = Number(pagesReadStr)
+    await DbQueries.savePagesReadIncrement(chatId!, userId!, inputPagesRead)
+
     const { khatamDate, participants } = await DbQueries.getGroupDetails(chatId!)
-    const startingPage = Number(participants[userId!].startingPage as string)
-    const pagesDaily = calculateDailyPages(khatamDate, startingPage, Number(pagesRead))
+    const { startingPage: startingPageStr, pagesRead: updatedPagesReadStr } = participants[userId!]
+    const pagesDaily = calculateDailyPages(khatamDate, Number(startingPageStr), Number(updatedPagesReadStr))
 
     const replyText = `Cool! If you read <b>${pagesDaily} pages daily</b>, you should be able to complete it on time, insyaallah! 💪🏽`
 

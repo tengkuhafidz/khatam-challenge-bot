@@ -4,6 +4,7 @@ import customParseFormat from "https://esm.sh/dayjs/plugin/customParseFormat"
 dayjs.extend(customParseFormat)
 
 export const calculateDailyPages = (khatamDate: string, startingPage: number, pagesRead = 0) => {
+    console.log("Calculating daily pages left...", khatamDate, startingPage, pagesRead)
     const pagesLeft = calculatePagesLeft(startingPage, pagesRead)
     // TODO: get khatamDate from DB
     const daysLeft = dayjs(khatamDate, "D/M/YYYY").diff(dayjs(), "day")
