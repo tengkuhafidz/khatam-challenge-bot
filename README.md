@@ -1,4 +1,4 @@
-# basic-budget-bot
+# khatam-challenge-bot
 
 ```
 export DEBUG="grammy*"
