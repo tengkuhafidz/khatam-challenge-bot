@@ -1,5 +1,6 @@
 import { Context } from "https://deno.land/x/grammy@v1.12.0/mod.ts";
 import dayjs from "https://esm.sh/dayjs";
+import _ from "https://deno.land/x/lodash@4.17.19"
 import { BotCommands } from "../constants/botCommands.ts";
 import { TOTAL_QURAN_PAGES } from "../constants/quran.ts";
 import { DbQueries } from "../db-queries/index.ts";
@@ -89,7 +90,9 @@ const constructDaysLeftText = (daysLeft: number) => {
 
 
 const constructParticipantsList = (participants: Participants, khatamDate: string) => {
-    return `${Object.values(participants).map((participantDetails) => {
+    const sortedParticipants = _.orderBy(Object.values(participants), ['pagesRead', 'lastReadAt'], ['desc', 'asc']) as ParticipantDetails[];
+    console.log(">>> sortedParticipants", sortedParticipants)
+    return `${sortedParticipants.map((participantDetails) => {
         return formatParticipantDetails(participantDetails, khatamDate)
     }).join('')}
 `
