@@ -40,7 +40,10 @@ const savePagesReadIncrement = async (chatId: string, userId: string, pagesRead:
         const dbRef = doc(db, "groups", chatId)
 
         await updateDoc(dbRef, {
-            [`participants.${userId}.pagesRead`]: increment(pagesRead)
+            [`participants.${userId}`]: {
+                pagesRead: increment(pagesRead),
+                lastReadAt: dayjs.unix()
+            }
         })
     } catch (error) {
         console.log("[ERROR] savePagesReadIncrement", JSON.stringify(error))
