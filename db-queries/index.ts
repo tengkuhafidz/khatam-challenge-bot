@@ -27,7 +27,7 @@ const saveParticipantDetails = async (chatId: string, userName: string, userId: 
         await updateDoc(dbRef, {
             [`participants.${userId}`]: {
                 name: userName,
-                startingPage
+                pagesRead: startingPage
             }
         })
     } catch (error) {

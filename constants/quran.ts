@@ -1,0 +1,1 @@
+export const TOTAL_QURAN_PAGES = 604
