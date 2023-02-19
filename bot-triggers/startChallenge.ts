@@ -5,7 +5,7 @@ import { CtxDetails } from "../utils/CtxDetails.ts";
 export const startChallenge = async (ctx: Context) => {
     const text = `What is the Khatam goal date? (format: DD/MM/YYYY)
 
-<i>💡 To complete by Ramadhan, set to: 22/04/2023</i>`
+<i>To complete by Ramadhan, set to: 22/04/2023</i>`
 
     const khatamDatePrompt = await ctx.reply(text, {
         reply_markup: { force_reply: true },
@@ -32,7 +32,7 @@ export const saveKhatamDate = async (ctx: Context) => {
 
     const replyText = `Khatam by <b>${khatamDate}</b> challenge initiated! 🤩
 
-Click /join_khatam_challenge to join!`
+🤖 Use /join_khatam_challenge to join!`
 
     await ctx.reply(replyText, {
         parse_mode: "HTML"

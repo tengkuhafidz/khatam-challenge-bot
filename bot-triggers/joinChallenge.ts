@@ -51,8 +51,8 @@ export const saveParticipantDetails = async (ctx: Context) => {
 export const displayParticipantsList = async (ctx: Context, khatamDate: string, participants: Participants) => {
     const daysLeft = calculateDaysLeft(khatamDate)
 
-    const text = `🗓 <b>Khatam: ${dayjs(khatamDate, "DD/MM/YYYY").format("DD MMMM YYYY")}</b>
-${daysLeft} days left
+    const text = `🗓 <b>Khatam: ${dayjs(khatamDate, "D/M/YYYY").format("DD MMMM YYYY")}</b>
+${constructDaysLeftText(daysLeft)} days left
 ${constructParticipantsList(participants, khatamDate)}
 🤖 Use /${BotCommands.Read} to log your progress
 `
@@ -60,6 +60,31 @@ ${constructParticipantsList(participants, khatamDate)}
     await ctx.reply(text, {
         parse_mode: "HTML"
     });
+}
+
+const constructDaysLeftText = (daysLeft: number) => {
+    if (daysLeft > 10) {
+        return `${daysLeft} days left`
+    }
+    if (daysLeft > 1) {
+        return `${daysLeft} days left 😎`
+    }
+
+    if (daysLeft = 1) {
+        return `Tomorrow's the final day 💪🏽`
+    }
+
+    if (daysLeft = 0) {
+        return `Khatam Day - May Allah bless your efforts 🥳`
+    }
+
+    if (daysLeft = -1) {
+        return `${daysLeft * -1} day after 🙂`
+    }
+
+    if (daysLeft < -1) {
+        return `${daysLeft * -1} days after 👀`
+    }
 }
 
 
@@ -72,8 +97,11 @@ const constructParticipantsList = (participants: Participants, khatamDate: strin
 
 const formatParticipantDetails = (participantDetails: ParticipantDetails, khatamDate: string) => {
     const { name, pagesRead } = participantDetails;
+
+    const displayName = pagesRead >= TOTAL_QURAN_PAGES ? `⭐️${name}⭐️` : name
+
     return `
-<b>${name}</b>
+<b>${displayName}</b>
 📖 Page ${pagesRead} / ${TOTAL_QURAN_PAGES} (${calculatePercentageRead(pagesRead)})
 🎯 To read ${calculateDailyPages(khatamDate, pagesRead)} pages per day
 `

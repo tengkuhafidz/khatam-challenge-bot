@@ -9,7 +9,7 @@ export const calculateDailyPages = (khatamDate: string, pagesRead = 0) => {
     const pagesLeft = calculatePagesLeft(pagesRead)
     const daysLeft = dayjs(khatamDate, "D/M/YYYY").diff(dayjs(), "day")
 
-    return (pagesLeft / daysLeft).toFixed(1)
+    return Math.ceil(pagesLeft / daysLeft)
 }
 
 const calculatePagesLeft = (pagesRead = 0) => {
@@ -21,5 +21,13 @@ export const calculateDaysLeft = (khatamDate: string) => {
 }
 
 export const calculatePercentageRead = (pagesRead: number) => {
-    return pagesRead === 0 ? "0%" : ((pagesRead / TOTAL_QURAN_PAGES) * 100).toFixed(0) + "%"
+    if (pagesRead >= TOTAL_QURAN_PAGES) {
+        return "100%"
+    }
+
+    if (pagesRead === 0) {
+        return "0%"
+    }
+
+    return ((pagesRead / TOTAL_QURAN_PAGES) * 100).toFixed(0) + "%"
 }
