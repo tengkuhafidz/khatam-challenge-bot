@@ -2,7 +2,7 @@ import { Context } from "https://deno.land/x/grammy@v1.12.0/mod.ts";
 import { DbQueries } from "../db-queries/index.ts";
 import { calculateDailyPages } from "../utils/calculatePages.ts";
 import { CtxDetails } from "../utils/CtxDetails.ts";
-import { displayParticipantsList } from "./joinChallenge.ts";
+import { displayProgressMessages } from "./joinChallenge.ts";
 
 export const read = async (ctx: Context) => {
     const ctxDetails = new CtxDetails(ctx)
@@ -34,11 +34,5 @@ export const savePagesReadIncrement = async (ctx: Context) => {
     const { pagesRead: updatedPagesReadStr } = participants[userId!]
     const pagesDaily = calculateDailyPages(khatamDate, Number(updatedPagesReadStr))
 
-    const replyText = `Cool! If you read <b>${pagesDaily} pages daily</b>, you should be able to complete it on time, insyaallah! 💪🏽`
-
-    await ctx.reply(replyText, {
-        parse_mode: "HTML"
-    });
-
-    await displayParticipantsList(ctx, khatamDate, participants)
+    await displayProgressMessages(ctx, khatamDate, pagesDaily, participants)
 }

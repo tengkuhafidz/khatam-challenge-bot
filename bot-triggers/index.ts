@@ -5,8 +5,7 @@ import { saveKhatamDate, startChallenge } from "./startChallenge.ts";
 export const CommandTriggers = {
     startChallenge,
     joinChallenge,
-    read,
-
+    read
 };
 
 export const ReplyTriggers = {

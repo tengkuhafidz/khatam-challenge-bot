@@ -8,8 +8,8 @@ export const calculateDailyPages = (khatamDate: string, pagesRead = 0) => {
     console.log("Calculating daily pages left...", khatamDate, pagesRead)
     const pagesLeft = calculatePagesLeft(pagesRead)
     const daysLeft = dayjs(khatamDate, "D/M/YYYY").diff(dayjs(), "day")
-
-    return Math.ceil(pagesLeft / daysLeft)
+    const formattedPagesLeft = pagesLeft < 0 ? 0 : Math.ceil(pagesLeft / daysLeft)
+    return formattedPagesLeft
 }
 
 const calculatePagesLeft = (pagesRead = 0) => {

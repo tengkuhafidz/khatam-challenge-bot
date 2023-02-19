@@ -59,7 +59,6 @@ const getGroupDetails = async (chatId: string) => {
     }
 }
 
-
 export const DbQueries = {
     saveKhatamDate,
     saveParticipantDetails,
