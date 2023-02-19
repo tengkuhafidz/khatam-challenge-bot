@@ -1,4 +1,7 @@
 import dayjs from "https://esm.sh/dayjs"
+import customParseFormat from "https://esm.sh/dayjs/plugin/customParseFormat"
+
+dayjs.extend(customParseFormat)
 
 export const calculateDailyPages = (khatamDate: string, startingPage: number, pagesRead = 0) => {
     const pagesLeft = calculatePagesLeft(startingPage, pagesRead)

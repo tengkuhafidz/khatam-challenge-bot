@@ -25,11 +25,9 @@ const saveParticipantDetails = async (chatId: string, userName: string, userId: 
         const dbRef = doc(db, "groups", chatId)
 
         await updateDoc(dbRef, {
-            participants: {
-                [userId]: {
-                    name: userName,
-                    startingPage
-                }
+            [`participants.${userId}`]: {
+                name: userName,
+                startingPage
             }
         })
     } catch (error) {
