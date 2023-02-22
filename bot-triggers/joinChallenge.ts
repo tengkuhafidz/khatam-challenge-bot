@@ -1,5 +1,4 @@
-// @deno-types="npm:@types/lodash"
-import _ from "npm:lodash";
+import _ from "https://raw.githubusercontent.com/lodash/lodash/4.17.21-es/lodash.js";
 import { Context } from "https://deno.land/x/grammy@v1.12.0/mod.ts";
 import dayjs from "https://esm.sh/dayjs";
 import { BotCommands } from "../constants/botCommands.ts";
