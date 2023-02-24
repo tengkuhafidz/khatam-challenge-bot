@@ -6,13 +6,16 @@ import { displayProgressMessages } from "./joinChallenge.ts";
 
 export const read = async (ctx: Context) => {
     const ctxDetails = new CtxDetails(ctx)
-    const { userName } = ctxDetails
+    const { userName, userId } = ctxDetails
 
     const pagesReadPrompt = await ctx.reply(`How many pages did you read, ${userName}?`, {
         reply_markup: { force_reply: true },
     });
 
-    return pagesReadPrompt?.message_id
+    return {
+        userId: userId!,
+        messageId: pagesReadPrompt?.message_id
+    }
 }
 
 // =============================================================================

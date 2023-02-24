@@ -14,16 +14,19 @@ import { delay } from "../utils/delay.ts";
 
 export const joinChallenge = async (ctx: Context) => {
     const ctxDetails = new CtxDetails(ctx)
-    const { userName } = ctxDetails
+    const { userName, userId } = ctxDetails
 
     const startingPagePrompt = await ctx.reply(`Welcome to the khatam challenge, <b>${userName}</b> 👋🏽
 
 Which page of the Quran will you be starting from?`, {
         reply_markup: { force_reply: true },
-        parse_mode: "HTML"
+        parse_mode: "HTML",
     });
 
-    return startingPagePrompt?.message_id
+    return {
+        userId: userId!,
+        messageId: startingPagePrompt?.message_id
+    }
 }
 
 // =============================================================================
@@ -50,7 +53,6 @@ export const displayProgressMessages = async (ctx: Context, khatamDate: string, 
     const replyText = pagesDaily > 0 ?
         `Cool! If you read <b>${pagesDaily} pages daily</b>, you should be able to complete it on time, insyaallah! 💪🏽`
         : `Masyaallah, you have khatam the Quran! 🤩 Barakallahu feekum 🤲🏼`
-
     await ctx.reply(replyText, {
         parse_mode: "HTML"
     });

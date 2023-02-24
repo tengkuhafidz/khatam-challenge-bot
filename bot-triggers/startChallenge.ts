@@ -3,6 +3,9 @@ import { DbQueries } from "../db-queries/index.ts";
 import { CtxDetails } from "../utils/CtxDetails.ts";
 
 export const startChallenge = async (ctx: Context) => {
+    const ctxDetails = new CtxDetails(ctx)
+    const { userId } = ctxDetails
+
     const text = `What is the Khatam goal date? (format: DD/MM/YYYY)
 
 <i>To complete by Ramadhan, set to: 22/04/2023</i>`
@@ -12,7 +15,11 @@ export const startChallenge = async (ctx: Context) => {
         parse_mode: "HTML"
     });
 
-    return khatamDatePrompt?.message_id
+
+    return {
+        userId: userId!,
+        messageId: khatamDatePrompt?.message_id
+    }
 }
 
 // =============================================================================
