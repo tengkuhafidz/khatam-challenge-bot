@@ -1,15 +1,16 @@
 import { Context } from "https://deno.land/x/grammy@v1.12.0/mod.ts";
 import _ from "https://raw.githubusercontent.com/lodash/lodash/4.17.21-es/lodash.js";
 import { BotCommands } from "../constants/botCommands.ts";
+import { encouragements } from "../constants/encouragements.ts";
 import { Gifs } from "../constants/gifs.ts";
 import { TOTAL_QURAN_PAGES } from "../constants/quran.ts";
 import { DbQueries } from "../db-queries/index.ts";
 import { ParticipantDetails, Participants } from "../types/index.ts";
 import { calculateDailyPages, calculateDaysLeft, calculatePercentageRead } from "../utils/calculatePages.ts";
 import { CtxDetails } from "../utils/CtxDetails.ts";
+import { parseKhatamDate } from "../utils/date.ts";
 import { delay } from "../utils/delay.ts";
 import { getRandom } from "../utils/getRandom.ts";
-import { parseKhatamDate } from "../utils/date.ts";
 
 export const joinChallenge = async (ctx: Context) => {
     const ctxDetails = new CtxDetails(ctx)
@@ -57,30 +58,17 @@ Please ensure that your starting page value is a valid number within 1 - 604.
     const pagesRead = startingPage - 1
     await DbQueries.saveParticipantDetails(chatId!, userName, userId!, pagesRead)
     const { khatamDate, participants } = await DbQueries.getGroupDetails(chatId!);
-    const pagesDaily = calculateDailyPages(khatamDate, Number(startingPage))
 
-    await displayProgressMessages(ctx, khatamDate, pagesDaily, participants)
-}
-
-export const displayProgressMessages = async (ctx: Context, khatamDate: string, pagesDaily: number, participants: Participants) => {
-    const replyText = pagesDaily > 0 ?
-        `Masyaallah~ May you be consistent in reading the Quran. 💚  
-
-If you read <b>${pagesDaily} pages daily</b>, you should be able to complete it on time, insyaallah! 💪🏽`
-        : `Masyaallah, you have khatam the Quran! 🤩 Barakallahu feekum 🤲🏼`
-    await ctx.reply(replyText, {
+    await ctx.reply(`Noted. Here are the list of current participants 👇🏽`, {
         parse_mode: "HTML"
     });
-
-    if (pagesDaily <= 0) {
-        ctx.replyWithAnimation(getRandom(Gifs.khatam))
-        await delay(3500)
-    }
 
     await displayParticipantsList(ctx, khatamDate, participants)
 }
 
-const displayParticipantsList = async (ctx: Context, khatamDate: string, participants: Participants) => {
+
+
+export const displayParticipantsList = async (ctx: Context, khatamDate: string, participants: Participants) => {
     const daysLeft = calculateDaysLeft(khatamDate)
 
     const text = `🗓 <b>Khatam: ${parseKhatamDate(khatamDate).format("DD MMMM YYYY")}</b>
