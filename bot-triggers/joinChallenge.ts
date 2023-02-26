@@ -64,7 +64,9 @@ Please ensure that your starting page value is a valid number within 1 - 604.
 
 export const displayProgressMessages = async (ctx: Context, khatamDate: string, pagesDaily: number, participants: Participants) => {
     const replyText = pagesDaily > 0 ?
-        `Masyaallah~ If you read <b>${pagesDaily} pages daily</b>, you should be able to complete it on time, insyaallah! 💪🏽`
+        `Masyaallah~ May you be consistent in reading the Quran. 💚  
+
+If you read <b>${pagesDaily} pages daily</b>, you should be able to complete it on time, insyaallah! 💪🏽`
         : `Masyaallah, you have khatam the Quran! 🤩 Barakallahu feekum 🤲🏼`
     await ctx.reply(replyText, {
         parse_mode: "HTML"
@@ -82,7 +84,7 @@ const displayParticipantsList = async (ctx: Context, khatamDate: string, partici
     const daysLeft = calculateDaysLeft(khatamDate)
 
     const text = `🗓 <b>Khatam: ${parseKhatamDate(khatamDate).format("DD MMMM YYYY")}</b>
-${constructDaysLeftText(daysLeft)} days left
+${constructDaysLeftText(daysLeft)}
 ${constructParticipantsList(participants, khatamDate)}
 🤖 Use /${BotCommands.Read} to log your progress
 `
@@ -134,7 +136,7 @@ const formatParticipantDetails = (participantDetails: ParticipantDetails, khatam
 
     return `
 <b>${displayName}</b>
-📖 Page ${displayPagesRead} / ${TOTAL_QURAN_PAGES} (${calculatePercentageRead(pagesRead)})
+📖 Have read ${displayPagesRead} / ${TOTAL_QURAN_PAGES} pages (${calculatePercentageRead(pagesRead)})
 🎯 To read ${calculateDailyPages(khatamDate, pagesRead)} pages per day
 `
 }
