@@ -20,14 +20,14 @@ const saveKhatamDate = async (chatId: string, khatamDate: string) => {
     }
 }
 
-const saveParticipantDetails = async (chatId: string, userName: string, userId: string, startingPage: number) => {
+const saveParticipantDetails = async (chatId: string, userName: string, userId: string, pagesRead: number) => {
     try {
         const dbRef = doc(db, "groups", chatId)
 
         await updateDoc(dbRef, {
             [`participants.${userId}`]: {
                 name: userName,
-                pagesRead: startingPage
+                pagesRead
             }
         })
     } catch (error) {

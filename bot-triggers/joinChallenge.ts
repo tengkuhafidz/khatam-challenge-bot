@@ -41,7 +41,21 @@ export const saveParticipantDetails = async (ctx: Context) => {
     }
 
     const startingPage = Number(startingPageStr)
-    await DbQueries.saveParticipantDetails(chatId!, userName, userId!, startingPage)
+    if (isNaN(startingPage) || startingPage < 1 || startingPage > 604) {
+        const replyText = `🚫 <b>Invalid starting page value</b>
+Please ensure that your starting page value is a valid number within 1 - 604.
+
+🤖 Use /${BotCommands.Join} to try again.`
+
+        await ctx.reply(replyText, {
+            parse_mode: "HTML"
+        });
+        // reply error message
+        return
+    }
+
+    const pagesRead = startingPage - 1
+    await DbQueries.saveParticipantDetails(chatId!, userName, userId!, pagesRead)
     const { khatamDate, participants } = await DbQueries.getGroupDetails(chatId!);
     const pagesDaily = calculateDailyPages(khatamDate, Number(startingPage))
 
