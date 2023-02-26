@@ -21,10 +21,11 @@ let khatamDatePromptRes: PromptRes
 let startingPagePromptRes: PromptRes
 let pagesReadPromptRes: PromptRes
 
+bot.command("start", (ctx) => CommandTriggers.howItWorks(ctx));
+bot.command(BotCommands.HowItWorks, (ctx) => CommandTriggers.howItWorks(ctx));
 bot.command(BotCommands.StartChallenge, async (ctx) => khatamDatePromptRes = await CommandTriggers.startChallenge(ctx));
 bot.command(BotCommands.Join, async (ctx) => startingPagePromptRes = await CommandTriggers.joinChallenge(ctx));
 bot.command(BotCommands.Read, async (ctx) => pagesReadPromptRes = await CommandTriggers.read(ctx));
-
 
 // =============================================================================
 // Catch-all Message Reply
