@@ -1,6 +1,8 @@
 import { Context } from "https://deno.land/x/grammy@v1.12.0/mod.ts";
+import { BotCommands } from "../constants/botCommands.ts";
 import { DbQueries } from "../db-queries/index.ts";
 import { CtxDetails } from "../utils/CtxDetails.ts";
+import { parseKhatamDate } from "../utils/date.ts";
 
 export const startChallenge = async (ctx: Context) => {
     const ctxDetails = new CtxDetails(ctx)
@@ -14,7 +16,6 @@ export const startChallenge = async (ctx: Context) => {
         reply_markup: { force_reply: true },
         parse_mode: "HTML"
     });
-
 
     return {
         userId: userId!,
@@ -35,11 +36,24 @@ export const saveKhatamDate = async (ctx: Context) => {
         return
     }
 
+    if (!parseKhatamDate(khatamDate).isValid()) {
+        const replyText = `🚫 <b>Invalid date format</b>
+Please ensure your date format is DD/MM/YYYY (e.g. 22/04/20203)
+
+🤖 Use /${BotCommands.StartChallenge} to try again.`
+
+        await ctx.reply(replyText, {
+            parse_mode: "HTML"
+        });
+        // reply error message
+        return
+    }
+
     await DbQueries.saveKhatamDate(chatId!, khatamDate)
 
     const replyText = `Khatam by <b>${khatamDate}</b> challenge initiated! 🤩
 
-🤖 Use /join_khatam_challenge to join!`
+🤖 Use /${BotCommands.Join} to join!`
 
     await ctx.reply(replyText, {
         parse_mode: "HTML"

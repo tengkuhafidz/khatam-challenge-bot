@@ -1,16 +1,15 @@
-import _ from "https://raw.githubusercontent.com/lodash/lodash/4.17.21-es/lodash.js";
 import { Context } from "https://deno.land/x/grammy@v1.12.0/mod.ts";
-import dayjs from "https://esm.sh/dayjs";
+import _ from "https://raw.githubusercontent.com/lodash/lodash/4.17.21-es/lodash.js";
 import { BotCommands } from "../constants/botCommands.ts";
+import { Gifs } from "../constants/gifs.ts";
 import { TOTAL_QURAN_PAGES } from "../constants/quran.ts";
 import { DbQueries } from "../db-queries/index.ts";
-import { ParticipantDetails } from "../types/index.ts";
-import { Participants } from "../types/index.ts";
+import { ParticipantDetails, Participants } from "../types/index.ts";
 import { calculateDailyPages, calculateDaysLeft, calculatePercentageRead } from "../utils/calculatePages.ts";
 import { CtxDetails } from "../utils/CtxDetails.ts";
-import { getRandom } from "../utils/getRandom.ts";
-import { Gifs } from "../constants/gifs.ts";
 import { delay } from "../utils/delay.ts";
+import { getRandom } from "../utils/getRandom.ts";
+import { parseKhatamDate } from "../utils/date.ts";
 
 export const joinChallenge = async (ctx: Context) => {
     const ctxDetails = new CtxDetails(ctx)
@@ -51,7 +50,7 @@ export const saveParticipantDetails = async (ctx: Context) => {
 
 export const displayProgressMessages = async (ctx: Context, khatamDate: string, pagesDaily: number, participants: Participants) => {
     const replyText = pagesDaily > 0 ?
-        `Cool! If you read <b>${pagesDaily} pages daily</b>, you should be able to complete it on time, insyaallah! 💪🏽`
+        `Masyaallah~ If you read <b>${pagesDaily} pages daily</b>, you should be able to complete it on time, insyaallah! 💪🏽`
         : `Masyaallah, you have khatam the Quran! 🤩 Barakallahu feekum 🤲🏼`
     await ctx.reply(replyText, {
         parse_mode: "HTML"
@@ -68,7 +67,7 @@ export const displayProgressMessages = async (ctx: Context, khatamDate: string, 
 const displayParticipantsList = async (ctx: Context, khatamDate: string, participants: Participants) => {
     const daysLeft = calculateDaysLeft(khatamDate)
 
-    const text = `🗓 <b>Khatam: ${dayjs(khatamDate, "D/M/YYYY").format("DD MMMM YYYY")}</b>
+    const text = `🗓 <b>Khatam: ${parseKhatamDate(khatamDate).format("DD MMMM YYYY")}</b>
 ${constructDaysLeftText(daysLeft)} days left
 ${constructParticipantsList(participants, khatamDate)}
 🤖 Use /${BotCommands.Read} to log your progress
