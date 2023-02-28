@@ -37,7 +37,7 @@ export const saveKhatamDate = async (ctx: Context) => {
     }
 
     if (!parseKhatamDate(khatamDate).isValid()) {
-        const replyText = `🚫 <b>Invalid date format</b>
+        const replyText = `🚫 <b>Invalid Date Format</b>
 Please ensure your date format is DD/MM/YYYY (e.g. 22/04/20203)
 
 🤖 Use /${BotCommands.StartChallenge} to try again.`
@@ -53,7 +53,7 @@ Please ensure your date format is DD/MM/YYYY (e.g. 22/04/20203)
 
     const replyText = `Khatam by <b>${khatamDate}</b> challenge initiated! 🤩
 
-🤖 Use /${BotCommands.Join} to join!`
+🤖 Use /${BotCommands.Join} to join.`
 
     await ctx.reply(replyText, {
         parse_mode: "HTML"

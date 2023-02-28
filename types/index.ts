@@ -12,3 +12,10 @@ export interface PromptRes {
     messageId: number,
     userId: string
 }
+
+export interface GroupDetails {
+    chatId: string
+    createdAt: number
+    khatamDate: string
+    participants: Participants
+}

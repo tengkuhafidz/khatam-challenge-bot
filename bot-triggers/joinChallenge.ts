@@ -1,20 +1,24 @@
 import { Context } from "https://deno.land/x/grammy@v1.12.0/mod.ts";
 import _ from "https://raw.githubusercontent.com/lodash/lodash/4.17.21-es/lodash.js";
 import { BotCommands } from "../constants/botCommands.ts";
-import { encouragements } from "../constants/encouragements.ts";
-import { Gifs } from "../constants/gifs.ts";
 import { TOTAL_QURAN_PAGES } from "../constants/quran.ts";
 import { DbQueries } from "../db-queries/index.ts";
 import { ParticipantDetails, Participants } from "../types/index.ts";
 import { calculateDailyPages, calculateDaysLeft, calculatePercentageRead } from "../utils/calculatePages.ts";
 import { CtxDetails } from "../utils/CtxDetails.ts";
 import { parseKhatamDate } from "../utils/date.ts";
-import { delay } from "../utils/delay.ts";
-import { getRandom } from "../utils/getRandom.ts";
+import { hasStartedChallenge, noChallengeErrorResponse } from "../utils/vaildations.ts";
 
 export const joinChallenge = async (ctx: Context) => {
     const ctxDetails = new CtxDetails(ctx)
-    const { userName, userId } = ctxDetails
+    const { userName, userId, chatId } = ctxDetails
+
+    const groupDetails = await DbQueries.getGroupDetails(chatId!);
+
+    if (!hasStartedChallenge(groupDetails)) {
+        await noChallengeErrorResponse(ctx)
+        return
+    }
 
     const startingPagePrompt = await ctx.reply(`Welcome to the khatam challenge, <b>${userName}</b> 👋🏽
 
@@ -43,7 +47,7 @@ export const saveParticipantDetails = async (ctx: Context) => {
 
     const startingPage = Number(startingPageStr)
     if (isNaN(startingPage) || startingPage < 1 || startingPage > 604) {
-        const replyText = `🚫 <b>Invalid starting page value</b>
+        const replyText = `🚫 <b>Invalid Starting Page Value</b>
 Please ensure that your starting page value is a valid number within 1 - 604.
 
 🤖 Use /${BotCommands.Join} to try again.`
@@ -57,15 +61,14 @@ Please ensure that your starting page value is a valid number within 1 - 604.
 
     const pagesRead = startingPage - 1
     await DbQueries.saveParticipantDetails(chatId!, userName, userId!, pagesRead)
-    const { khatamDate, participants } = await DbQueries.getGroupDetails(chatId!);
 
     await ctx.reply(`Noted. Here are the list of current participants 👇🏽`, {
         parse_mode: "HTML"
     });
 
+    const { khatamDate, participants } = await DbQueries.getGroupDetails(chatId!);
     await displayParticipantsList(ctx, khatamDate, participants)
 }
-
 
 
 export const displayParticipantsList = async (ctx: Context, khatamDate: string, participants: Participants) => {
