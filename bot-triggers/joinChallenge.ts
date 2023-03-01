@@ -4,7 +4,7 @@ import { BotCommands } from "../constants/botCommands.ts";
 import { TOTAL_QURAN_PAGES } from "../constants/quran.ts";
 import { DbQueries } from "../db-queries/index.ts";
 import { ParticipantDetails, Participants } from "../types/index.ts";
-import { calculateDailyPages, calculateDaysLeft, calculatePercentageRead } from "../utils/calculatePages.ts";
+import { calculateDailyPages, calculateDaysLeft, calculateKhatamCount, calculatePercentageRead } from "../utils/calculatePages.ts";
 import { CtxDetails } from "../utils/CtxDetails.ts";
 import { parseKhatamDate } from "../utils/date.ts";
 import { hasJoinedChallenge, hasJoinedErrorResponse, hasStartedChallenge, noChallengeErrorResponse } from "../utils/vaildations.ts";
@@ -87,13 +87,13 @@ const constructParticipantsList = (participants: Participants, khatamDate: strin
 
 const formatParticipantDetails = (participantDetails: ParticipantDetails, khatamDate: string) => {
     const { name, pagesRead } = participantDetails;
-
-    const displayName = pagesRead >= TOTAL_QURAN_PAGES ? `⭐️${name}⭐️` : name
-    const displayPagesRead = pagesRead > TOTAL_QURAN_PAGES ? TOTAL_QURAN_PAGES : pagesRead
+    const numberOfKhatam = calculateKhatamCount(pagesRead)
+    const khatamStars = "⭐️".repeat(numberOfKhatam)
+    const toKhatamAgainPhrase = numberOfKhatam > 0 ? "to khatam again" : ""
 
     return `
-<b>${displayName}</b>
-📖 Have read ${displayPagesRead} / ${TOTAL_QURAN_PAGES} pages (${calculatePercentageRead(pagesRead)})
-🎯 To read ${calculateDailyPages(khatamDate, pagesRead)} pages per day
+<b>${name} ${khatamStars}</b>
+📖 Have read <b>${pagesRead}</b>/${TOTAL_QURAN_PAGES} pages (${calculatePercentageRead(pagesRead)})
+🎯 To read <b>${calculateDailyPages(khatamDate, pagesRead)}</b> pages per day ${toKhatamAgainPhrase}
 `
 }

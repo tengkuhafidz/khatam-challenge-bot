@@ -3,6 +3,8 @@ export enum BotCommands {
     Join = "join_khatam_challenge",
     Read = "read_quran",
     HowItWorks = "how_khatam_challenge_bot_works"
+    // EditKhatamGoal = "edit_khatam_goal"
+    // RestartChallenge = "restart_khatam_challenge"
     // EditEndDate = "edit_khatam_date",
     // SetTimezone = "set_timezone",
     // SetReminder = "set_khatam_reminder"

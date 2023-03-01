@@ -1,4 +1,4 @@
-import dayjs from "https://esm.sh/dayjs"
+import dayjs from "https://esm.sh/dayjs";
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js';
 import { doc, getDoc, getFirestore, increment, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js';
 import { appConfig } from "../configs/appConfig.ts";

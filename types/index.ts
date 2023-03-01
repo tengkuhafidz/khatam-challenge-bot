@@ -5,7 +5,7 @@ export interface Participants {
 export interface ParticipantDetails {
     name: string
     pagesRead: number
-    lastReadAt: number
+    lastReadAt?: number
 }
 
 export interface PromptRes {
