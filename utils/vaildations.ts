@@ -44,3 +44,14 @@ It looks like you have not joined the khatam challenge in this group.
     });
 }
 
+export const hasJoinedErrorResponse = async (ctx: Context) => {
+    const replyText = `🚫 <b>Already a Participant</b>
+It looks like you have joined the khatam challenge in this group.
+
+🤖 Use /${BotCommands.Read} to log the number of pages you have read.`
+
+    await ctx.reply(replyText, {
+        parse_mode: "HTML"
+    });
+}
+

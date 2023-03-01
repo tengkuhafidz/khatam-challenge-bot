@@ -18,13 +18,12 @@ bot.api.setMyCommands(
 )
 
 let khatamDatePromptRes: PromptRes
-let startingPagePromptRes: PromptRes
-let pagesReadPromptRes: PromptRes
+let pagesReadPromptRes: PromptRes | null
 
 bot.command("start", (ctx) => CommandTriggers.howItWorks(ctx));
 bot.command(BotCommands.HowItWorks, (ctx) => CommandTriggers.howItWorks(ctx));
 bot.command(BotCommands.StartChallenge, async (ctx) => khatamDatePromptRes = await CommandTriggers.startChallenge(ctx));
-bot.command(BotCommands.Join, async (ctx) => startingPagePromptRes = await CommandTriggers.joinChallenge(ctx));
+bot.command(BotCommands.Join, async (ctx) => await CommandTriggers.joinChallenge(ctx));
 bot.command(BotCommands.Read, async (ctx) => pagesReadPromptRes = await CommandTriggers.read(ctx));
 
 // =============================================================================
@@ -41,12 +40,6 @@ bot.on("message", async (ctx) => {
 
     if (khatamDatePromptRes?.messageId === replyToId) {
         await ReplyTriggers.saveKhatamDate(ctx)
-        ctx.api.deleteMessage(chatId!, replyToId)
-        return
-    }
-
-    if (startingPagePromptRes?.messageId === replyToId && startingPagePromptRes.userId === userId) {
-        await ReplyTriggers.saveParticipantDetails(ctx)
         ctx.api.deleteMessage(chatId!, replyToId)
         return
     }

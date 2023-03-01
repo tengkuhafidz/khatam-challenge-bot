@@ -18,12 +18,12 @@ export const read = async (ctx: Context) => {
     const groupDetails = await DbQueries.getGroupDetails(chatId!)
     if (!hasStartedChallenge(groupDetails)) {
         await noChallengeErrorResponse(ctx)
-        return
+        return null
     }
 
     if (!hasJoinedChallenge(groupDetails, userId!)) {
         await notParticipantErrorResponse(ctx)
-        return
+        return null
     }
 
     const pagesReadPrompt = await ctx.reply(`How many pages did you read, ${userName}?`, {

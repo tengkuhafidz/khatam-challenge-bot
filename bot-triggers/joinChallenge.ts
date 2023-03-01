@@ -7,69 +7,35 @@ import { ParticipantDetails, Participants } from "../types/index.ts";
 import { calculateDailyPages, calculateDaysLeft, calculatePercentageRead } from "../utils/calculatePages.ts";
 import { CtxDetails } from "../utils/CtxDetails.ts";
 import { parseKhatamDate } from "../utils/date.ts";
-import { hasStartedChallenge, noChallengeErrorResponse } from "../utils/vaildations.ts";
+import { hasJoinedChallenge, hasJoinedErrorResponse, hasStartedChallenge, noChallengeErrorResponse } from "../utils/vaildations.ts";
 
 export const joinChallenge = async (ctx: Context) => {
     const ctxDetails = new CtxDetails(ctx)
     const { userName, userId, chatId } = ctxDetails
 
     const groupDetails = await DbQueries.getGroupDetails(chatId!);
-
     if (!hasStartedChallenge(groupDetails)) {
         await noChallengeErrorResponse(ctx)
         return
     }
 
-    const startingPagePrompt = await ctx.reply(`Welcome to the khatam challenge, <b>${userName}</b> 👋🏽
+    if (hasJoinedChallenge(groupDetails, userId!)) {
+        await hasJoinedErrorResponse(ctx)
+        return
+    }
 
-Which page of the Quran will you be starting from?`, {
+    await DbQueries.saveParticipantDetails(chatId!, userName, userId!, 0)
+    await ctx.reply(`Welcome to the khatam challenge, <b>${userName}</b> 👋🏽
+
+Here are the list of current participants 👇🏽`, {
         reply_markup: { force_reply: true },
         parse_mode: "HTML",
     });
 
-    return {
-        userId: userId!,
-        messageId: startingPagePrompt?.message_id
-    }
-}
-
-// =============================================================================
-// Catch-all Message Reply
-// =============================================================================
-
-export const saveParticipantDetails = async (ctx: Context) => {
-    const ctxDetails = new CtxDetails(ctx)
-    const { messageText, chatId, userName, userId } = ctxDetails
-    const startingPageStr = messageText!
-    if (!startingPageStr) {
-        return
-    }
-
-    const startingPage = Number(startingPageStr)
-    if (isNaN(startingPage) || startingPage < 1 || startingPage > 604) {
-        const replyText = `🚫 <b>Invalid Starting Page Value</b>
-Please ensure that your starting page value is a valid number within 1 - 604.
-
-🤖 Use /${BotCommands.Join} to try again.`
-
-        await ctx.reply(replyText, {
-            parse_mode: "HTML"
-        });
-        // reply error message
-        return
-    }
-
-    const pagesRead = startingPage - 1
-    await DbQueries.saveParticipantDetails(chatId!, userName, userId!, pagesRead)
-
-    await ctx.reply(`Noted. Here are the list of current participants 👇🏽`, {
-        parse_mode: "HTML"
-    });
-
+    // TODO: consider optimising such that we dont have to do another db call here
     const { khatamDate, participants } = await DbQueries.getGroupDetails(chatId!);
     await displayParticipantsList(ctx, khatamDate, participants)
 }
-
 
 export const displayParticipantsList = async (ctx: Context, khatamDate: string, participants: Participants) => {
     const daysLeft = calculateDaysLeft(khatamDate)
