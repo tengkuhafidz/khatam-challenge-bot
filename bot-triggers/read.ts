@@ -18,7 +18,6 @@ export const read = async (ctx: Context) => {
     const { userName, userId, chatId } = ctxDetails
 
     const groupDetails = await DbQueries.getGroupDetails(chatId!)
-    initialPagesRead = groupDetails?.participants[userId!]?.pagesRead!
 
     if (!hasStartedChallenge(groupDetails!)) {
         await noChallengeErrorResponse(ctx)
@@ -29,6 +28,8 @@ export const read = async (ctx: Context) => {
         await notParticipantErrorResponse(ctx)
         return null
     }
+
+    initialPagesRead = groupDetails?.participants[userId!]?.pagesRead!
 
     const pagesReadPrompt = await ctx.reply(`How many pages did you read, ${userName}?`, {
         reply_markup: { force_reply: true },
