@@ -3,7 +3,7 @@ import { BotCommands } from "../constants/botCommands.ts";
 import { GroupDetails } from "../types/index.ts";
 
 // =============================================================================
-// No Challenge Started
+// Has Started Challenge
 // =============================================================================
 
 export const hasStartedChallenge = (groupDetails: GroupDetails) => {
@@ -22,7 +22,7 @@ It looks like no khatam challenge was started in this group.
 }
 
 // =============================================================================
-// Not joined
+// Has Joined Challenge
 // =============================================================================
 
 export const hasJoinedChallenge = (groupDetails: GroupDetails, userId: string) => {
