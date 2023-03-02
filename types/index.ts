@@ -17,5 +17,6 @@ export interface GroupDetails {
     chatId: string
     createdAt: number
     khatamDate: string
+    khatamPages: number
     participants: Participants
 }

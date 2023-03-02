@@ -17,14 +17,16 @@ bot.api.setMyCommands(
     }))
 )
 
-let khatamDatePromptRes: PromptRes
+let startChallengePromptRes: PromptRes
 let pagesReadPromptRes: PromptRes | null
+let khatamPagesPromptRes: PromptRes | null
 
 bot.command("start", (ctx) => CommandTriggers.howItWorks(ctx));
 bot.command(BotCommands.HowItWorks, (ctx) => CommandTriggers.howItWorks(ctx));
-bot.command(BotCommands.StartChallenge, async (ctx) => khatamDatePromptRes = await CommandTriggers.startChallenge(ctx));
+bot.command(BotCommands.StartChallenge, async (ctx) => startChallengePromptRes = await CommandTriggers.startChallenge(ctx));
 bot.command(BotCommands.Join, async (ctx) => await CommandTriggers.joinChallenge(ctx));
 bot.command(BotCommands.Read, async (ctx) => pagesReadPromptRes = await CommandTriggers.read(ctx));
+bot.command(BotCommands.EditKhatamPages, async (ctx) => khatamPagesPromptRes = await CommandTriggers.editKhatamPages(ctx));
 
 // =============================================================================
 // Catch-all Message Reply
@@ -38,7 +40,7 @@ bot.on("message", async (ctx) => {
         return
     }
 
-    if (khatamDatePromptRes?.messageId === replyToId) {
+    if (startChallengePromptRes?.messageId === replyToId) {
         await ReplyTriggers.saveKhatamDate(ctx)
         ctx.api.deleteMessage(chatId!, replyToId)
         return
@@ -46,6 +48,12 @@ bot.on("message", async (ctx) => {
 
     if (pagesReadPromptRes?.messageId === replyToId && pagesReadPromptRes.userId === userId) {
         await ReplyTriggers.savePagesReadIncrement(ctx)
+        ctx.api.deleteMessage(chatId!, replyToId)
+        return
+    }
+
+    if (khatamPagesPromptRes?.messageId === replyToId) {
+        await ReplyTriggers.saveKhatamPages(ctx)
         ctx.api.deleteMessage(chatId!, replyToId)
         return
     }

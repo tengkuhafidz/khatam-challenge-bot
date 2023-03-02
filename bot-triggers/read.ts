@@ -69,37 +69,36 @@ Please ensure that your pages read value is a valid number.
     }
 
     await DbQueries.savePagesReadIncrement(chatId!, userId!, inputPagesRead)
-    const { khatamDate, participants } = await DbQueries.getGroupDetails(chatId!)
+    const { khatamDate, participants, khatamPages } = await DbQueries.getGroupDetails(chatId!)
     const { pagesRead: totalPagesRead } = participants[userId!]
-    await displayProgressMessages(ctx, khatamDate, totalPagesRead, participants)
+    await displayProgressMessages(ctx, khatamDate, totalPagesRead, participants, khatamPages)
 }
 
-const checkNewKhatam = (initialPagesRead: number, updatedPagesRead: number) => {
-    const initialKhatamCount = calculateKhatamCount(initialPagesRead)
-    const updatedKhatamCount = calculateKhatamCount(updatedPagesRead)
-    return updatedKhatamCount > initialKhatamCount
-}
-
-
-export const displayProgressMessages = async (ctx: Context, khatamDate: string, totalPagesRead: number, participants: Participants) => {
-    const hasNewKhatam = checkNewKhatam(initialPagesRead, totalPagesRead)
+export const displayProgressMessages = async (ctx: Context, khatamDate: string, totalPagesRead: number, participants: Participants, khatamPages: number) => {
+    const hasNewKhatam = checkNewKhatam(initialPagesRead, totalPagesRead, khatamPages)
 
     if (hasNewKhatam) {
         displayKhatamMessage(ctx)
     } else {
-        displayEncouragingMessage(ctx, khatamDate, totalPagesRead)
+        displayEncouragingMessage(ctx, khatamDate, totalPagesRead, khatamPages)
     }
     await delay(3000)
-    await displayParticipantsList(ctx, khatamDate, participants)
+    await displayParticipantsList(ctx, khatamDate, participants, khatamPages)
 }
 
-export const displayEncouragingMessage = async (ctx: Context, khatamDate: string, totalPagesRead: number) => {
-    const pagesDaily = calculateDailyPages(khatamDate, totalPagesRead)
-    const hasKhatam = calculateKhatamCount(totalPagesRead) > 0
+const checkNewKhatam = (initialPagesRead: number, updatedPagesRead: number, khatamPages: number) => {
+    const initialKhatamCount = calculateKhatamCount(initialPagesRead, khatamPages)
+    const updatedKhatamCount = calculateKhatamCount(updatedPagesRead, khatamPages)
+    return updatedKhatamCount > initialKhatamCount
+}
+
+export const displayEncouragingMessage = async (ctx: Context, khatamDate: string, totalPagesRead: number, khatamPages: number) => {
+    const pagesDaily = calculateDailyPages(khatamDate, totalPagesRead, khatamPages)
+    const hasKhatam = calculateKhatamCount(totalPagesRead, khatamPages) > 0
 
     const encouragingText = `${getRandom(encouragements)} 💚  
 
-If you read <b>${pagesDaily} pages daily</b>, you should be able to khatam ${hasKhatam ? "again" : "on time"}, insyaallah! 💪🏽`
+If you read <b>${pagesDaily} pages daily</b>, you should be able to complete your khatam goal ${hasKhatam ? "again" : "on time"}, insyaallah! 💪🏽`
 
     await ctx.reply(encouragingText, {
         parse_mode: "HTML"
@@ -107,7 +106,7 @@ If you read <b>${pagesDaily} pages daily</b>, you should be able to khatam ${has
 }
 
 export const displayKhatamMessage = async (ctx: Context) => {
-    const khatamText = `Masyaallah, you have khatam the Quran! 🤩 Barakallahu feekum 🤲🏼`
+    const khatamText = `Masyaallah, you have completed your Khatam goal! 🤩 Barakallahu feekum 🤲🏼`
 
     await ctx.reply(khatamText, {
         parse_mode: "HTML"

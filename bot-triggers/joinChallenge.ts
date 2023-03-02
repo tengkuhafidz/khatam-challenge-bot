@@ -1,7 +1,6 @@
 import { Context } from "https://deno.land/x/grammy@v1.12.0/mod.ts";
 import _ from "https://raw.githubusercontent.com/lodash/lodash/4.17.21-es/lodash.js";
 import { BotCommands } from "../constants/botCommands.ts";
-import { TOTAL_QURAN_PAGES } from "../constants/quran.ts";
 import { DbQueries } from "../db-queries/index.ts";
 import { ParticipantDetails, Participants } from "../types/index.ts";
 import { calculateDailyPages, calculateDaysLeft, calculateKhatamCount, calculatePercentageRead } from "../utils/calculatePages.ts";
@@ -28,21 +27,20 @@ export const joinChallenge = async (ctx: Context) => {
     await ctx.reply(`Welcome to the khatam challenge, <b>${userName}</b> 👋🏽
 
 Here are the list of current participants 👇🏽`, {
-        reply_markup: { force_reply: true },
         parse_mode: "HTML",
     });
 
     // TODO: consider optimising such that we dont have to do another db call here
-    const { khatamDate, participants } = await DbQueries.getGroupDetails(chatId!);
-    await displayParticipantsList(ctx, khatamDate, participants)
+    const { khatamDate, participants, khatamPages } = await DbQueries.getGroupDetails(chatId!);
+    await displayParticipantsList(ctx, khatamDate, participants, khatamPages)
 }
 
-export const displayParticipantsList = async (ctx: Context, khatamDate: string, participants: Participants) => {
+export const displayParticipantsList = async (ctx: Context, khatamDate: string, participants: Participants, khatamPages: number) => {
     const daysLeft = calculateDaysLeft(khatamDate)
 
     const text = `🗓 <b>Khatam: ${parseKhatamDate(khatamDate).format("DD MMMM YYYY")}</b>
 ${constructDaysLeftText(daysLeft)}
-${constructParticipantsList(participants, khatamDate)}
+${constructParticipantsList(participants, khatamDate, khatamPages)}
 🤖 Use /${BotCommands.Read} to log your progress
 `
 
@@ -77,23 +75,23 @@ const constructDaysLeftText = (daysLeft: number) => {
     }
 }
 
-const constructParticipantsList = (participants: Participants, khatamDate: string) => {
+const constructParticipantsList = (participants: Participants, khatamDate: string, khatamPages: number) => {
     const sortedParticipants = _.orderBy(Object.values(participants), ['pagesRead', 'lastReadAt'], ['desc', 'asc']) as ParticipantDetails[];
     return `${sortedParticipants.map((participantDetails) => {
-        return formatParticipantDetails(participantDetails, khatamDate)
+        return formatParticipantDetails(participantDetails, khatamDate, khatamPages)
     }).join('')}
 `
 }
 
-const formatParticipantDetails = (participantDetails: ParticipantDetails, khatamDate: string) => {
+const formatParticipantDetails = (participantDetails: ParticipantDetails, khatamDate: string, khatamPages: number) => {
     const { name, pagesRead } = participantDetails;
-    const numberOfKhatam = calculateKhatamCount(pagesRead)
+    const numberOfKhatam = calculateKhatamCount(pagesRead, khatamPages)
     const khatamStars = "⭐️".repeat(numberOfKhatam)
-    const toKhatamAgainPhrase = numberOfKhatam > 0 ? "to khatam again" : ""
+    const toKhatamAgainPhrase = numberOfKhatam > 0 ? "to complete again" : ""
 
     return `
 <b>${name} ${khatamStars}</b>
-📖 Have read <b>${pagesRead}</b>/${TOTAL_QURAN_PAGES} pages (${calculatePercentageRead(pagesRead)})
-🎯 To read <b>${calculateDailyPages(khatamDate, pagesRead)}</b> pages per day ${toKhatamAgainPhrase}
+📖 Have read <b>${pagesRead}</b>/${khatamPages} pages (${calculatePercentageRead(pagesRead, khatamPages)})
+🎯 To read <b>${calculateDailyPages(khatamDate, pagesRead, khatamPages)}</b> pages per day ${toKhatamAgainPhrase}
 `
 }
