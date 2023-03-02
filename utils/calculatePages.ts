@@ -6,7 +6,8 @@ dayjs.extend(customParseFormat)
 
 export const calculateDailyPages = (khatamDate: string, pagesRead: number, khatamPages: number) => {
     console.log("Calculating daily pages left...", khatamDate, pagesRead, khatamPages)
-    const pagesLeft = calculatePagesLeft(pagesRead, khatamPages)
+    const correctedPagesRead = pagesRead < 0 ? 0 : pagesRead
+    const pagesLeft = calculatePagesLeft(correctedPagesRead, khatamPages)
     const daysLeft = calculateDaysLeft(khatamDate)
     const formattedPagesLeft = Math.ceil(pagesLeft / daysLeft)
     return formattedPagesLeft
@@ -18,7 +19,8 @@ const calculatePagesLeft = (pagesRead: number, khatamPages: number) => {
 }
 
 export const calculateKhatamCount = (pagesRead: number, khatamPages: number) => {
-    return Math.floor(pagesRead / khatamPages)
+    const correctedPagesRead = pagesRead < 0 ? 0 : pagesRead
+    return Math.floor(correctedPagesRead / khatamPages)
 }
 
 export const calculateDaysLeft = (khatamDate: string) => {
@@ -26,5 +28,6 @@ export const calculateDaysLeft = (khatamDate: string) => {
 }
 
 export const calculatePercentageRead = (pagesRead: number, khatamPages: number) => {
-    return ((pagesRead / khatamPages) * 100).toFixed(0) + "%"
+    const correctedPagesRead = pagesRead < 0 ? 0 : pagesRead
+    return ((correctedPagesRead / khatamPages) * 100).toFixed(0) + "%"
 }
