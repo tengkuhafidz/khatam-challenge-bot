@@ -5,6 +5,7 @@ export enum BotCommands {
     HowItWorks = "how_khatam_challenge_bot_works",
     EditKhatamPages = "edit_khatam_pages_goal",
     EditKhatamDate = "edit_khatam_date_goal",
+    ViewKhatamProgress = "view_khatam_progress"
     // RestartChallenge = "restart_khatam_challenge"
     // SetTimezone = "set_timezone",
     // SetReminder = "set_khatam_reminder"
@@ -16,7 +17,8 @@ export const commandDescriptions = {
     [BotCommands.Read]: "Log the number of pages read",
     [BotCommands.HowItWorks]: "Explanation of how this bot works",
     [BotCommands.EditKhatamPages]: "Edit the number of pages the group aims to complete",
-    [BotCommands.EditKhatamDate]: "Edit the khatam goal date"
+    [BotCommands.EditKhatamDate]: "Edit the khatam goal date",
+    [BotCommands.ViewKhatamProgress]: "View the group's khatam progress"
     // [BotCommands.SetReminder]: "Set daily reminder to read",
 }
 

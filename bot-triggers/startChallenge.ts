@@ -1,6 +1,8 @@
 import { Context } from "https://deno.land/x/grammy@v1.12.0/mod.ts";
 import { BotCommands } from "../constants/botCommands.ts";
+import { TOTAL_QURAN_PAGES } from "../constants/quran.ts";
 import { DbQueries } from "../db-queries/index.ts";
+import { constructKhatamGoalText } from "../utils/commonReplies.ts";
 import { CtxDetails } from "../utils/CtxDetails.ts";
 import { parseKhatamDate } from "../utils/date.ts";
 
@@ -51,7 +53,8 @@ Please ensure your date format is DD/MM/YYYY (e.g. 22/04/20203)
 
     await DbQueries.saveKhatamChallengeDetails(chatId!, khatamDate)
 
-    const replyText = `Khatam by <b>${khatamDate}</b> challenge started! 🤩
+    const replyText = `🎯 <b>Khatam Challenge Started</b>
+${constructKhatamGoalText(khatamDate, TOTAL_QURAN_PAGES)}
 
 🤖 Use /${BotCommands.Join} to join.`
 

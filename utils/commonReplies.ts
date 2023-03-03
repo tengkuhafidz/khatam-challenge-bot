@@ -22,7 +22,7 @@ ${constructKhatamGoalText(khatamDate, khatamPages)}
     });
 }
 
-const constructKhatamGoalText = (khatamDate: string, khatamPages: number) => {
+export const constructKhatamGoalText = (khatamDate: string, khatamPages: number) => {
     const daysLeft = calculateDaysLeft(khatamDate)
     return `To read ${khatamPages} pages by ${parseKhatamDate(khatamDate).format('DD MMMM YYYY')} <i>(${constructDaysLeftText(daysLeft)})</i>`
 }
@@ -65,7 +65,6 @@ ${constructParticipantsList(participants, khatamDate, khatamPages)}
         parse_mode: "HTML"
     });
 }
-
 
 const constructParticipantsList = (participants: Participants, khatamDate: string, khatamPages: number) => {
     const sortedParticipants = _.orderBy(Object.values(participants), ['pagesRead', 'lastReadAt'], ['desc', 'asc']) as ParticipantDetails[];

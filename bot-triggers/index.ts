@@ -4,6 +4,7 @@ import { howItWorks } from "./howItWorks.ts";
 import { editKhatamPages, saveKhatamPages } from "./editKhatamPages.ts";
 import { editKhatamDate, saveKhatamDate } from "./editKhatamDate.ts";
 import { saveKhatamChallengeDetails, startChallenge } from "./startChallenge.ts";
+import { viewKhatamProgress } from "./viewKhatamProgress.ts";
 
 export const CommandTriggers = {
     startChallenge,
@@ -11,7 +12,8 @@ export const CommandTriggers = {
     read,
     howItWorks,
     editKhatamPages,
-    editKhatamDate
+    editKhatamDate,
+    viewKhatamProgress
 };
 
 export const ReplyTriggers = {

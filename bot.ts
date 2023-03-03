@@ -29,6 +29,7 @@ bot.command(BotCommands.Join, async (ctx) => await CommandTriggers.joinChallenge
 bot.command(BotCommands.Read, async (ctx) => pagesReadPromptRes = await CommandTriggers.read(ctx));
 bot.command(BotCommands.EditKhatamPages, async (ctx) => khatamPagesPromptRes = await CommandTriggers.editKhatamPages(ctx));
 bot.command(BotCommands.EditKhatamDate, async (ctx) => editKhatamDatePromptRes = await CommandTriggers.editKhatamDate(ctx));
+bot.command(BotCommands.ViewKhatamProgress, async (ctx) => await CommandTriggers.viewKhatamProgress(ctx));
 
 // =============================================================================
 // Catch-all Message Reply

@@ -26,7 +26,7 @@ It looks like no khatam challenge was started in this group.
 // =============================================================================
 
 export const hasJoinedChallenge = (groupDetails: GroupDetails, userId: string) => {
-    if (!groupDetails || !groupDetails?.participants) {
+    if (!hasParticipants(groupDetails)) {
         return false
     }
 
@@ -55,3 +55,21 @@ It looks like you have joined the khatam challenge in this group.
     });
 }
 
+// =============================================================================
+// Has Participants
+// =============================================================================
+
+export const hasParticipants = (groupDetails: GroupDetails) => {
+    return (groupDetails && groupDetails?.participants && Object.keys(groupDetails?.participants).length > 0)
+}
+
+export const hasNoParticipants = async (ctx: Context) => {
+    const replyText = `🚫 <b>No Participants</b>
+It looks like this challenge does not have any participants yet.
+
+🤖 Use /${BotCommands.Join} to join.`
+
+    await ctx.reply(replyText, {
+        parse_mode: "HTML"
+    });
+}
