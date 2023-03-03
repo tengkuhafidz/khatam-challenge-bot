@@ -4,30 +4,32 @@ import { DbQueries } from "../db-queries/index.ts";
 import { GroupDetails } from "../types/index.ts";
 import { displayNewKhatamGoal } from "../utils/commonReplies.ts";
 import { CtxDetails } from "../utils/CtxDetails.ts";
+import { parseKhatamDate } from "../utils/date.ts";
 import { hasStartedChallenge, noChallengeErrorResponse } from "../utils/vaildations.ts";
 
 let groupDetails: GroupDetails
 
-export const editKhatamPages = async (ctx: Context) => {
+export const editKhatamDate = async (ctx: Context) => {
     const ctxDetails = new CtxDetails(ctx)
     const { userId, chatId } = ctxDetails
 
-    groupDetails = await DbQueries.getGroupDetails(chatId!)
-
-    if (!hasStartedChallenge(groupDetails!)) {
+    groupDetails = await DbQueries.getGroupDetails(chatId!);
+    if (!hasStartedChallenge(groupDetails)) {
         await noChallengeErrorResponse(ctx)
         return null
     }
+    const text = `What is the new khatam goal date? (format: DD/MM/YYYY)
 
-    const khatamPagesGoalPromptText = `How many pages does this group aim to complete?`
+<i>The current khatam goal date is: ${groupDetails.khatamDate}</i>`
 
-    const khatamPagesGoalPrompt = await ctx.reply(khatamPagesGoalPromptText, {
+    const khatamDatePrompt = await ctx.reply(text, {
         reply_markup: { force_reply: true },
+        parse_mode: "HTML"
     });
 
     return {
         userId: userId!,
-        messageId: khatamPagesGoalPrompt?.message_id
+        messageId: khatamDatePrompt?.message_id
     }
 }
 
@@ -36,21 +38,20 @@ export const editKhatamPages = async (ctx: Context) => {
 // Catch-all Message Reply
 // =============================================================================
 
-export const saveKhatamPages = async (ctx: Context) => {
+export const saveKhatamDate = async (ctx: Context) => {
     const ctxDetails = new CtxDetails(ctx)
     const { messageText, chatId } = ctxDetails
-    const khatamPagesStr = messageText!
-    if (!khatamPagesStr) {
+    const newKhatamDate = messageText!
+
+    if (!newKhatamDate) {
         return
     }
 
-    const newKhatamPages = Number(khatamPagesStr)
+    if (!parseKhatamDate(newKhatamDate).isValid()) {
+        const replyText = `🚫 <b>Invalid Date Format</b>
+Please ensure your date format is DD/MM/YYYY (e.g. 22/04/20203)
 
-    if (isNaN(newKhatamPages) || newKhatamPages < 1) {
-        const replyText = `🚫 <b>Invalid Khatam Pages Value</b>
-Please ensure that your pages read value is a valid positive number.
-
-🤖 Use /${BotCommands.EditKhatamPages} to try again.`
+🤖 Use /${BotCommands.EditKhatamDate} to try again.`
 
         await ctx.reply(replyText, {
             parse_mode: "HTML"
@@ -59,7 +60,9 @@ Please ensure that your pages read value is a valid positive number.
         return
     }
 
-    await DbQueries.saveKhatamPages(chatId!, newKhatamPages)
+    await DbQueries.saveKhatamDate(chatId!, newKhatamDate)
 
-    await displayNewKhatamGoal(ctx, groupDetails.khatamDate, newKhatamPages)
+    await displayNewKhatamGoal(ctx, newKhatamDate, groupDetails.khatamPages)
 }
+
+

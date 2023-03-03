@@ -5,11 +5,10 @@ import { Gifs } from "../constants/gifs.ts";
 import { DbQueries } from "../db-queries/index.ts";
 import { Participants } from "../types/index.ts";
 import { calculateDailyPages, calculateKhatamCount } from "../utils/calculatePages.ts";
+import { displayParticipantsList } from "../utils/commonReplies.ts";
 import { CtxDetails } from "../utils/CtxDetails.ts";
-import { delay } from "../utils/delay.ts";
 import { getRandom } from "../utils/getRandom.ts";
 import { hasJoinedChallenge, hasStartedChallenge, noChallengeErrorResponse, notParticipantErrorResponse } from "../utils/vaildations.ts";
-import { displayParticipantsList } from "./joinChallenge.ts";
 
 let initialPagesRead: number;
 
@@ -82,7 +81,7 @@ export const displayProgressMessages = async (ctx: Context, khatamDate: string, 
     } else {
         displayEncouragingMessage(ctx, khatamDate, totalPagesRead, khatamPages)
     }
-    await delay(3000)
+
     await displayParticipantsList(ctx, khatamDate, participants, khatamPages)
 }
 

@@ -7,7 +7,7 @@ import { TOTAL_QURAN_PAGES } from "../constants/quran.ts";
 const firebaseApp = initializeApp(appConfig.firebaseConfig);
 const db = getFirestore(firebaseApp);
 
-const saveKhatamDate = async (chatId: string, khatamDate: string) => {
+const saveKhatamChallengeDetails = async (chatId: string, khatamDate: string) => {
     try {
         const dbRef = doc(db, "groups", chatId)
         await setDoc(dbRef, {
@@ -46,7 +46,19 @@ const saveKhatamPages = async (chatId: string, khatamPages: number) => {
             khatamPages
         })
     } catch (error) {
-        console.log("[ERROR] saveParticipantDetails", JSON.stringify(error))
+        console.log("[ERROR] saveKhatamPages", JSON.stringify(error))
+    }
+}
+
+const saveKhatamDate = async (chatId: string, khatamDate: string) => {
+    try {
+        const dbRef = doc(db, "groups", chatId)
+
+        await updateDoc(dbRef, {
+            khatamDate
+        })
+    } catch (error) {
+        console.log("[ERROR] saveKhatamDate", JSON.stringify(error))
     }
 }
 
@@ -75,9 +87,10 @@ const getGroupDetails = async (chatId: string) => {
 }
 
 export const DbQueries = {
-    saveKhatamDate,
+    saveKhatamChallengeDetails,
     saveParticipantDetails,
     savePagesReadIncrement,
     getGroupDetails,
-    saveKhatamPages
+    saveKhatamPages,
+    saveKhatamDate
 }

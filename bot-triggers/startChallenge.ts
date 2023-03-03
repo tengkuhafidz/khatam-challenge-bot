@@ -8,7 +8,7 @@ export const startChallenge = async (ctx: Context) => {
     const ctxDetails = new CtxDetails(ctx)
     const { userId } = ctxDetails
 
-    const text = `What is the Khatam goal date? (format: DD/MM/YYYY)
+    const text = `What is the khatam goal date? (format: DD/MM/YYYY)
 
 <i>To complete by Ramadhan, set to: 22/04/2023</i>`
 
@@ -27,7 +27,7 @@ export const startChallenge = async (ctx: Context) => {
 // Catch-all Message Reply
 // =============================================================================
 
-export const saveKhatamDate = async (ctx: Context) => {
+export const saveKhatamChallengeDetails = async (ctx: Context) => {
     const ctxDetails = new CtxDetails(ctx)
     const { messageText, chatId } = ctxDetails
     const khatamDate = messageText!
@@ -49,9 +49,9 @@ Please ensure your date format is DD/MM/YYYY (e.g. 22/04/20203)
         return
     }
 
-    await DbQueries.saveKhatamDate(chatId!, khatamDate)
+    await DbQueries.saveKhatamChallengeDetails(chatId!, khatamDate)
 
-    const replyText = `Khatam by <b>${khatamDate}</b> challenge initiated! 🤩
+    const replyText = `Khatam by <b>${khatamDate}</b> challenge started! 🤩
 
 🤖 Use /${BotCommands.Join} to join.`
 

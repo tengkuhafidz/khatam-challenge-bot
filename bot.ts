@@ -20,6 +20,7 @@ bot.api.setMyCommands(
 let startChallengePromptRes: PromptRes
 let pagesReadPromptRes: PromptRes | null
 let khatamPagesPromptRes: PromptRes | null
+let editKhatamDatePromptRes: PromptRes | null
 
 bot.command("start", (ctx) => CommandTriggers.howItWorks(ctx));
 bot.command(BotCommands.HowItWorks, (ctx) => CommandTriggers.howItWorks(ctx));
@@ -27,6 +28,7 @@ bot.command(BotCommands.StartChallenge, async (ctx) => startChallengePromptRes =
 bot.command(BotCommands.Join, async (ctx) => await CommandTriggers.joinChallenge(ctx));
 bot.command(BotCommands.Read, async (ctx) => pagesReadPromptRes = await CommandTriggers.read(ctx));
 bot.command(BotCommands.EditKhatamPages, async (ctx) => khatamPagesPromptRes = await CommandTriggers.editKhatamPages(ctx));
+bot.command(BotCommands.EditKhatamDate, async (ctx) => editKhatamDatePromptRes = await CommandTriggers.editKhatamDate(ctx));
 
 // =============================================================================
 // Catch-all Message Reply
@@ -41,7 +43,7 @@ bot.on("message", async (ctx) => {
     }
 
     if (startChallengePromptRes?.messageId === replyToId) {
-        await ReplyTriggers.saveKhatamDate(ctx)
+        await ReplyTriggers.saveKhatamChallengeDetails(ctx)
         ctx.api.deleteMessage(chatId!, replyToId)
         return
     }
@@ -54,6 +56,12 @@ bot.on("message", async (ctx) => {
 
     if (khatamPagesPromptRes?.messageId === replyToId) {
         await ReplyTriggers.saveKhatamPages(ctx)
+        ctx.api.deleteMessage(chatId!, replyToId)
+        return
+    }
+
+    if (editKhatamDatePromptRes?.messageId === replyToId) {
+        await ReplyTriggers.saveKhatamDate(ctx)
         ctx.api.deleteMessage(chatId!, replyToId)
         return
     }
