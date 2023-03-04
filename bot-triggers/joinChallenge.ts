@@ -23,7 +23,7 @@ export const joinChallenge = async (ctx: Context) => {
     await DbQueries.saveParticipantDetails(chatId!, userName, userId!, 0)
     await ctx.reply(`Welcome to the khatam challenge, <b>${userName}</b> 👋🏽
 
-🤖 Use /${BotCommands.Read} to update the number of pages you have read.`, {
+May Allah accept your good intentions and guide you towards achieving them. Ameen. 🤲🏼`, {
         parse_mode: "HTML",
     });
 

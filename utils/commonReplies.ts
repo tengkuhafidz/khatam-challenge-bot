@@ -59,7 +59,7 @@ export const displayParticipantsList = async (ctx: Context, khatamDate: string, 
     const text = `🎯 <b>Khatam Goal</b>
 ${constructKhatamGoalText(khatamDate, khatamPages)}
 ${constructParticipantsList(participants, khatamDate, khatamPages)}
-🤖 Use /${BotCommands.Read} to log your progress.
+🤖 Use /${BotCommands.Read} to add the number of pages you have read.
 `
     await ctx.reply(text, {
         parse_mode: "HTML"
