@@ -28,7 +28,7 @@ export const constructKhatamGoalText = (khatamDate: string, khatamPages: number)
 }
 
 const constructDaysLeftText = (daysLeft: number) => {
-    if (daysLeft > 10) {
+    if (daysLeft > 1) {
         return `${daysLeft} days left`
     }
 
@@ -54,7 +54,7 @@ const constructDaysLeftText = (daysLeft: number) => {
 // =============================================================================
 
 export const displayParticipantsList = async (ctx: Context, khatamDate: string, participants: Participants, khatamPages: number) => {
-    await delay(3000)
+    await delay(2500)
 
     const text = `🎯 <b>Khatam Goal</b>
 ${constructKhatamGoalText(khatamDate, khatamPages)}
