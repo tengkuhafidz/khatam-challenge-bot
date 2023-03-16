@@ -6,7 +6,7 @@ import { calculateDaysLeft } from "../utils/calculatePages.ts";
 import { displayNewKhatamGoal } from "../utils/commonReplies.ts";
 import { CtxDetails } from "../utils/CtxDetails.ts";
 import { parseKhatamDate } from "../utils/date.ts";
-import { hasStartedChallenge, noChallengeErrorResponse } from "../utils/vaildations.ts";
+import { hasStartedChallenge, invalidKhatamDateErrorResponse, isInvalidKhatamDate, noChallengeErrorResponse } from "../utils/vaildations.ts";
 
 let groupDetails: GroupDetails
 
@@ -48,16 +48,8 @@ export const saveKhatamDate = async (ctx: Context) => {
         return
     }
 
-    if (!parseKhatamDate(newKhatamDate).isValid() || calculateDaysLeft(newKhatamDate) < 0) {
-        const replyText = `🚫 <b>Invalid Date Format</b>
-Please ensure you input a future date format with the following format: DD/MM/YYYY (e.g. 22/04/20203)
-
-🤖 Use /${BotCommands.EditKhatamDate} to try again.`
-
-        await ctx.reply(replyText, {
-            parse_mode: "HTML"
-        });
-        // reply error message
+    if (isInvalidKhatamDate(newKhatamDate)) {
+        await invalidKhatamDateErrorResponse(ctx)
         return
     }
 

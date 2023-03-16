@@ -4,7 +4,7 @@ import { TOTAL_QURAN_PAGES } from "../constants/quran.ts";
 import { DbQueries } from "../db-queries/index.ts";
 import { constructKhatamGoalText } from "../utils/commonReplies.ts";
 import { CtxDetails } from "../utils/CtxDetails.ts";
-import { parseKhatamDate } from "../utils/date.ts";
+import { invalidKhatamDateErrorResponse, isInvalidKhatamDate } from "../utils/vaildations.ts";
 
 export const startChallenge = async (ctx: Context) => {
     const ctxDetails = new CtxDetails(ctx)
@@ -38,16 +38,8 @@ export const saveKhatamChallengeDetails = async (ctx: Context) => {
         return
     }
 
-    if (!parseKhatamDate(khatamDate).isValid()) {
-        const replyText = `🚫 <b>Invalid Date Format</b>
-Please ensure your date format is DD/MM/YYYY (e.g. 22/04/20203)
-
-🤖 Use /${BotCommands.StartChallenge} to try again.`
-
-        await ctx.reply(replyText, {
-            parse_mode: "HTML"
-        });
-        // reply error message
+    if (isInvalidKhatamDate(khatamDate)) {
+        await invalidKhatamDateErrorResponse(ctx)
         return
     }
 

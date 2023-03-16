@@ -2,7 +2,7 @@ import { Context } from "https://deno.land/x/grammy@v1.12.0/context.ts";
 import { DbQueries } from "../db-queries/index.ts";
 import { displayParticipantsList } from "../utils/commonReplies.ts";
 import { CtxDetails } from "../utils/CtxDetails.ts";
-import { hasNoParticipants, hasParticipants, hasStartedChallenge, noChallengeErrorResponse } from "../utils/vaildations.ts";
+import { hasNoParticipantsErrorResponse, hasParticipants, hasStartedChallenge, noChallengeErrorResponse } from "../utils/vaildations.ts";
 
 export const viewKhatamProgress = async (ctx: Context) => {
     const ctxDetails = new CtxDetails(ctx)
@@ -15,7 +15,7 @@ export const viewKhatamProgress = async (ctx: Context) => {
     }
 
     if (!hasParticipants(groupDetails)) {
-        await hasNoParticipants(ctx)
+        await hasNoParticipantsErrorResponse(ctx)
         return
     }
 

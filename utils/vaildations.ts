@@ -1,6 +1,8 @@
 import { Context } from "https://deno.land/x/grammy@v1.12.0/context.ts";
 import { BotCommands } from "../constants/botCommands.ts";
 import { GroupDetails } from "../types/index.ts";
+import { calculateDaysLeft } from "./calculatePages.ts";
+import { parseKhatamDate } from "./date.ts";
 
 // =============================================================================
 // Has Started Challenge
@@ -63,11 +65,30 @@ export const hasParticipants = (groupDetails: GroupDetails) => {
     return (groupDetails && groupDetails?.participants && Object.keys(groupDetails?.participants).length > 0)
 }
 
-export const hasNoParticipants = async (ctx: Context) => {
+export const hasNoParticipantsErrorResponse = async (ctx: Context) => {
     const replyText = `🚫 <b>No Participants</b>
 It looks like this challenge does not have any participants yet.
 
 🤖 Use /${BotCommands.Join} to join.`
+
+    await ctx.reply(replyText, {
+        parse_mode: "HTML"
+    });
+}
+
+// =============================================================================
+// Invalid Khatam Date
+// =============================================================================
+
+export const isInvalidKhatamDate = (khatamDate: string) => {
+    return !parseKhatamDate(khatamDate).isValid() || calculateDaysLeft(khatamDate) < 1
+}
+
+export const invalidKhatamDateErrorResponse = async (ctx: Context) => {
+    const replyText = `🚫 <b>Invalid Date Format</b>
+    Please ensure you input a future date with the following format: DD/MM/YYYY (e.g. 21/04/2023)
+    
+    🤖 Use /${BotCommands.EditKhatamDate} to try again.`
 
     await ctx.reply(replyText, {
         parse_mode: "HTML"
