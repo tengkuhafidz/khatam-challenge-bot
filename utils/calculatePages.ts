@@ -9,7 +9,8 @@ export const calculateDailyPages = (khatamDate: string, pagesRead: number, khata
     const correctedPagesRead = pagesRead < 0 ? 0 : pagesRead
     const pagesLeft = calculatePagesLeft(correctedPagesRead, khatamPages)
     const daysLeft = calculateDaysLeft(khatamDate)
-    const formattedPagesLeft = Math.ceil(pagesLeft / daysLeft)
+    const daysLeftForCalculation = daysLeft > 0 ? daysLeft : 1
+    const formattedPagesLeft = Math.ceil(pagesLeft / daysLeftForCalculation)
     return formattedPagesLeft
 }
 
@@ -24,7 +25,7 @@ export const calculateKhatamCount = (pagesRead: number, khatamPages: number) => 
 }
 
 export const calculateDaysLeft = (khatamDate: string) => {
-    return parseKhatamDate(khatamDate).diff(dayjs(), "day")
+    return parseKhatamDate(khatamDate).diff(dayjs(), "day") + 1
 }
 
 export const calculatePercentageRead = (pagesRead: number, khatamPages: number) => {

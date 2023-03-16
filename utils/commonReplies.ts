@@ -33,11 +33,11 @@ const constructDaysLeftText = (daysLeft: number) => {
     }
 
     if (daysLeft === 1) {
-        return `1 day left`
+        return `1 day to go! 💪🏽`
     }
 
     if (daysLeft === 0) {
-        return `Today!`
+        return `Today! 😎`
     }
 
     if (daysLeft === -1) {
