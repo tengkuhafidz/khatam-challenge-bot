@@ -12,7 +12,7 @@ export const startChallenge = async (ctx: Context) => {
 
     const text = `What is the khatam goal date? (format: DD/MM/YYYY)
 
-<i>To complete by Ramadhan, set to: 22/04/2023</i>`
+<i>To complete by Ramadhan, set to: 21/04/2023</i>`
 
     const khatamDatePrompt = await ctx.reply(text, {
         reply_markup: { force_reply: true },

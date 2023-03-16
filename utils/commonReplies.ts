@@ -23,7 +23,10 @@ ${constructKhatamGoalText(khatamDate, khatamPages)}
 }
 
 export const constructKhatamGoalText = (khatamDate: string, khatamPages: number) => {
+    console.log(">>> khatamDate", khatamDate)
     const daysLeft = calculateDaysLeft(khatamDate)
+    console.log(">>> daysLeft", daysLeft)
+
     return `To read ${khatamPages} pages by ${parseKhatamDate(khatamDate).format('DD MMMM YYYY')} <i>(${constructDaysLeftText(daysLeft)})</i>`
 }
 
@@ -40,12 +43,8 @@ const constructDaysLeftText = (daysLeft: number) => {
         return `Today! 😎`
     }
 
-    if (daysLeft === -1) {
-        return `1 day after 🙂`
-    }
-
-    if (daysLeft < -1) {
-        return `${daysLeft * -1} days after 👀`
+    if (daysLeft < 0) {
+        return `Overdue 😅`
     }
 }
 

@@ -2,6 +2,7 @@ import { Context } from "https://deno.land/x/grammy@v1.12.0/context.ts";
 import { BotCommands } from "../constants/botCommands.ts";
 import { DbQueries } from "../db-queries/index.ts";
 import { GroupDetails } from "../types/index.ts";
+import { calculateDaysLeft } from "../utils/calculatePages.ts";
 import { displayNewKhatamGoal } from "../utils/commonReplies.ts";
 import { CtxDetails } from "../utils/CtxDetails.ts";
 import { parseKhatamDate } from "../utils/date.ts";
@@ -47,9 +48,9 @@ export const saveKhatamDate = async (ctx: Context) => {
         return
     }
 
-    if (!parseKhatamDate(newKhatamDate).isValid()) {
+    if (!parseKhatamDate(newKhatamDate).isValid() || calculateDaysLeft(newKhatamDate) < 0) {
         const replyText = `🚫 <b>Invalid Date Format</b>
-Please ensure your date format is DD/MM/YYYY (e.g. 22/04/20203)
+Please ensure you input a future date format with the following format: DD/MM/YYYY (e.g. 22/04/20203)
 
 🤖 Use /${BotCommands.EditKhatamDate} to try again.`
 
