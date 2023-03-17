@@ -1,8 +1,10 @@
 import dayjs from "https://esm.sh/dayjs";
 import customParseFormat from "https://esm.sh/dayjs/plugin/customParseFormat";
+import utc from "https://esm.sh/dayjs/plugin/utc";
 import { parseKhatamDate } from "./date.ts";
 
 dayjs.extend(customParseFormat)
+dayjs.extend(utc)
 
 export const calculateDailyPages = (khatamDate: string, pagesRead: number, khatamPages: number) => {
     console.log("Calculating daily pages left...", khatamDate, pagesRead, khatamPages)
