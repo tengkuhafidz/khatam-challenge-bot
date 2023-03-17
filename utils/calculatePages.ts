@@ -25,7 +25,7 @@ export const calculateKhatamCount = (pagesRead: number, khatamPages: number) => 
 }
 
 export const calculateDaysLeft = (khatamDate: string) => {
-    return parseKhatamDate(khatamDate).diff(dayjs().startOf('day'), "day")
+    return parseKhatamDate(khatamDate).diff(dayjs().startOf('day').utcOffset(8), "day")
 }
 
 export const calculatePercentageRead = (pagesRead: number, khatamPages: number) => {

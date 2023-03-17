@@ -20,8 +20,6 @@ export const viewKhatamProgress = async (ctx: Context) => {
         return
     }
 
-    console.log(">>> currTime", dayjs().format())
-
     const { khatamDate, participants, khatamPages } = groupDetails
     await displayParticipantsList(ctx, khatamDate, participants, khatamPages)
 }
