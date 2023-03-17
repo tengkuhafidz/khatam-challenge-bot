@@ -8,7 +8,7 @@ export const calculateDailyPages = (khatamDate: string, pagesRead: number, khata
     console.log("Calculating daily pages left...", khatamDate, pagesRead, khatamPages)
     const correctedPagesRead = pagesRead < 0 ? 0 : pagesRead
     const pagesLeft = calculatePagesLeft(correctedPagesRead, khatamPages)
-    const daysLeft = calculateDaysLeft(khatamDate)
+    const daysLeft = calculateDaysLeft(khatamDate) + 1
     const daysLeftForCalculation = daysLeft > 0 ? daysLeft : 1
     const formattedPagesLeft = Math.ceil(pagesLeft / daysLeftForCalculation)
     return formattedPagesLeft
