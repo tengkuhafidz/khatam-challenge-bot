@@ -86,9 +86,9 @@ export const isInvalidKhatamDate = (khatamDate: string) => {
 
 export const invalidKhatamDateErrorResponse = async (ctx: Context) => {
     const replyText = `🚫 <b>Invalid Date Format</b>
-    Please ensure you input a future date with the following format: DD/MM/YYYY (e.g. 21/04/2023)
+Please ensure you input a future date with the following format: DD/MM/YYYY (e.g. 21/04/2023)
     
-    🤖 Use /${BotCommands.EditKhatamDate} to try again.`
+🤖 Use /${BotCommands.EditKhatamDate} to try again.`
 
     await ctx.reply(replyText, {
         parse_mode: "HTML"
