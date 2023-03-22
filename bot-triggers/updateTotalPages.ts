@@ -30,7 +30,7 @@ export const updateTotalPages = async (ctx: Context) => {
 
     initialPagesRead = groupDetails?.participants[userId!]?.pagesRead!
 
-    const pagesReadPrompt = await ctx.reply(`How many pages have you read in total? (e.g. the page you last read), ${userName}?`, {
+    const pagesReadPrompt = await ctx.reply(`What is the total number of pages you have read overall, ${userName}?`, {
         reply_markup: { force_reply: true },
     });
 

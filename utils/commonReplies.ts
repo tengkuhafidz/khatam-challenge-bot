@@ -1,6 +1,6 @@
 import { Context } from "https://deno.land/x/grammy@v1.12.0/context.ts";
 import _ from "https://raw.githubusercontent.com/lodash/lodash/4.17.21-es/lodash.js";
-import { BotCommands } from "../constants/botCommands.ts";
+import { BotCommands, commandDescriptions } from "../constants/botCommands.ts";
 import { ParticipantDetails, Participants } from "../types/index.ts";
 import { calculateDailyPages, calculateDaysLeft, calculateKhatamCount, calculatePercentageRead } from "./calculatePages.ts";
 import { parseKhatamDate } from "./date.ts";
@@ -58,7 +58,8 @@ export const displayParticipantsList = async (ctx: Context, khatamDate: string, 
     const text = `🎯 <b>Khatam Goal</b>
 ${constructKhatamGoalText(khatamDate, khatamPages)}
 ${constructParticipantsList(participants, khatamDate, khatamPages)}
-🤖 Use /${BotCommands.Read} to add the number of pages you have read.
+🤖 Use /${BotCommands.Read2} to ${commandDescriptions[BotCommands.Read2].toLowerCase()}.
+🤖 Use /${BotCommands.UpdateTotal} to ${commandDescriptions[BotCommands.UpdateTotal].toLowerCase()}.
 `
     await ctx.reply(text, {
         parse_mode: "HTML"
