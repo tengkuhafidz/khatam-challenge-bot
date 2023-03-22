@@ -16,6 +16,7 @@ This bot's aim is to facilitate a group to khatam the Quran together. 💫
 <b>Additional Commands:</b>
 
 🤖 Use /${BotCommands.ViewKhatamProgress} to ${commandDescriptions[BotCommands.ViewKhatamProgress].toLowerCase()}
+🤖 Use /${BotCommands.UpdateTotal} to ${commandDescriptions[BotCommands.UpdateTotal].toLowerCase()}
 🤖 Use /${BotCommands.EditKhatamDate} to ${commandDescriptions[BotCommands.EditKhatamDate].toLowerCase()}
 🤖 Use /${BotCommands.EditKhatamPages} to ${commandDescriptions[BotCommands.EditKhatamPages].toLowerCase()}
 `

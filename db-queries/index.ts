@@ -75,6 +75,19 @@ const savePagesReadIncrement = async (chatId: string, userId: string, pagesRead:
     }
 }
 
+const saveTotalPagesRead = async (chatId: string, userId: string, totalPagesRead: number) => {
+    try {
+        const dbRef = doc(db, "groups", chatId)
+
+        await updateDoc(dbRef, {
+            [`participants.${userId}.pagesRead`]: totalPagesRead,
+            [`participants.${userId}.lastReadAt`]: dayjs().unix()
+        })
+    } catch (error) {
+        console.log("[ERROR] saveTotalPagesRead", JSON.stringify(error))
+    }
+}
+
 const getGroupDetails = async (chatId: string) => {
     try {
         const docRef = doc(db, "groups", chatId)
@@ -90,6 +103,7 @@ export const DbQueries = {
     saveKhatamChallengeDetails,
     saveParticipantDetails,
     savePagesReadIncrement,
+    saveTotalPagesRead,
     getGroupDetails,
     saveKhatamPages,
     saveKhatamDate
