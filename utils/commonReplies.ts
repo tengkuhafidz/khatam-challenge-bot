@@ -5,6 +5,7 @@ import { ParticipantDetails, Participants } from "../types/index.ts";
 import { calculateDailyPages, calculateDaysLeft, calculateKhatamCount, calculatePercentageRead } from "./calculatePages.ts";
 import { parseKhatamDate } from "./date.ts";
 import { delay } from "./delay.ts";
+import { getKhatamPlannerUrl } from "./getKhatamPlannerUrl.ts";
 
 // =============================================================================
 // Display Khatam Goal
@@ -62,7 +63,8 @@ ${constructParticipantsList(participants, khatamDate, khatamPages)}
 🤖 Use /${BotCommands.UpdateTotal} to ${commandDescriptions[BotCommands.UpdateTotal].toLowerCase()}.
 `
     await ctx.reply(text, {
-        parse_mode: "HTML"
+        parse_mode: "HTML",
+        disable_web_page_preview: true
     });
 }
 
@@ -77,12 +79,13 @@ const constructParticipantsList = (participants: Participants, khatamDate: strin
 const formatParticipantDetails = (participantDetails: ParticipantDetails, khatamDate: string, khatamPages: number) => {
     const { name, pagesRead } = participantDetails;
     const numberOfKhatam = calculateKhatamCount(pagesRead, khatamPages)
+    const daysLeft = calculateDaysLeft(khatamDate)
     const khatamStars = "⭐️".repeat(numberOfKhatam)
     const toKhatamAgainPhrase = numberOfKhatam > 0 ? "to complete again" : ""
 
     return `
 <b>${name} ${khatamStars}</b>
 ✅ Have read ${pagesRead} pages (${calculatePercentageRead(pagesRead, khatamPages)})
-📈 To read ${calculateDailyPages(khatamDate, pagesRead, khatamPages)} pages per day ${toKhatamAgainPhrase}
+📈 To read <a href="${getKhatamPlannerUrl(daysLeft, pagesRead)}">${calculateDailyPages(khatamDate, pagesRead, khatamPages)} pages per day</a> ${toKhatamAgainPhrase}
 `
 }

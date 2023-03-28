@@ -4,9 +4,10 @@ import { encouragements } from "../constants/encouragements.ts";
 import { Gifs } from "../constants/gifs.ts";
 import { DbQueries } from "../db-queries/index.ts";
 import { Participants } from "../types/index.ts";
-import { calculateDailyPages, calculateKhatamCount } from "../utils/calculatePages.ts";
+import { calculateDailyPages, calculateDaysLeft, calculateKhatamCount } from "../utils/calculatePages.ts";
 import { displayParticipantsList } from "../utils/commonReplies.ts";
 import { CtxDetails } from "../utils/CtxDetails.ts";
+import { getKhatamPlannerUrl } from "../utils/getKhatamPlannerUrl.ts";
 import { getRandom } from "../utils/getRandom.ts";
 import { hasJoinedChallenge, hasStartedChallenge, noChallengeErrorResponse, notParticipantErrorResponse } from "../utils/vaildations.ts";
 
@@ -93,14 +94,15 @@ const checkNewKhatam = (initialPagesRead: number, updatedPagesRead: number, khat
 
 export const displayEncouragingMessage = async (ctx: Context, khatamDate: string, totalPagesRead: number, khatamPages: number) => {
     const pagesDaily = calculateDailyPages(khatamDate, totalPagesRead, khatamPages)
-    const hasKhatam = calculateKhatamCount(totalPagesRead, khatamPages) > 0
+    const daysLeft = calculateDaysLeft(khatamDate)
 
     const encouragingText = `${getRandom(encouragements)} 💚  
 
-If you read <b>${pagesDaily} pages daily</b>, you should be able to complete your khatam goal ${hasKhatam ? "again" : "on time"}, insyaallah! 💪🏽`
+💡<b>TIP</b>: Plan to <a href="${getKhatamPlannerUrl(daysLeft, totalPagesRead)}">read ${pagesDaily} pages daily around your prayer times</a>.🧎🏽‍♂️`
 
     await ctx.reply(encouragingText, {
-        parse_mode: "HTML"
+        parse_mode: "HTML",
+        disable_web_page_preview: true
     });
 }
 
