@@ -12,6 +12,17 @@ export const hasStartedChallenge = (groupDetails: GroupDetails) => {
     return !!groupDetails && !!groupDetails?.khatamDate
 }
 
+export const hasStartedErrorResponse = async (ctx: Context) => {
+    const replyText = `🚫 <b>Khatam Challenge Already Started</b>
+There is already a khatam challenge running in this group.
+
+🤖 Use /${BotCommands.Join} to join.`
+
+    await ctx.reply(replyText, {
+        parse_mode: "HTML"
+    });
+}
+
 export const noChallengeErrorResponse = async (ctx: Context) => {
     const replyText = `🚫 <b>Khatam Challenge Not Started</b>
 It looks like no khatam challenge was started in this group.

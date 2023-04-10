@@ -17,7 +17,7 @@ bot.api.setMyCommands(
     }))
 )
 
-let startChallengePromptRes: PromptRes
+let startChallengePromptRes: PromptRes | null
 let pagesReadPromptRes: PromptRes | null
 let totalPagesPromptRes: PromptRes | null
 let khatamPagesPromptRes: PromptRes | null

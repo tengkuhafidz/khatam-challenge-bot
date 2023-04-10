@@ -4,11 +4,17 @@ import { TOTAL_QURAN_PAGES } from "../constants/quran.ts";
 import { DbQueries } from "../db-queries/index.ts";
 import { constructKhatamGoalText } from "../utils/commonReplies.ts";
 import { CtxDetails } from "../utils/CtxDetails.ts";
-import { invalidKhatamDateErrorResponse, isInvalidKhatamDate } from "../utils/vaildations.ts";
+import { hasStartedChallenge, hasStartedErrorResponse, invalidKhatamDateErrorResponse, isInvalidKhatamDate } from "../utils/vaildations.ts";
 
 export const startChallenge = async (ctx: Context) => {
     const ctxDetails = new CtxDetails(ctx)
-    const { userId } = ctxDetails
+    const { userId, chatId } = ctxDetails
+
+    const groupDetails = await DbQueries.getGroupDetails(chatId!);
+    if (hasStartedChallenge(groupDetails)) {
+        await hasStartedErrorResponse(ctx)
+        return null
+    }
 
     const text = `What is the khatam goal date? (format: DD/MM/YYYY)
 

@@ -1,5 +1,4 @@
 import { Context } from "https://deno.land/x/grammy@v1.12.0/mod.ts";
-import { BotCommands } from "../constants/botCommands.ts";
 import { DbQueries } from "../db-queries/index.ts";
 import { displayParticipantsList } from "../utils/commonReplies.ts";
 import { CtxDetails } from "../utils/CtxDetails.ts";
