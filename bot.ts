@@ -26,7 +26,7 @@ let editKhatamDatePromptRes: PromptRes | null
 bot.command("start", (ctx) => CommandTriggers.howItWorks(ctx));
 bot.command(BotCommands.HowItWorks, (ctx) => CommandTriggers.howItWorks(ctx));
 bot.command(BotCommands.StartChallenge, async (ctx) => startChallengePromptRes = await CommandTriggers.startChallenge(ctx));
-bot.command(BotCommands.StartChallenge, async (ctx) => startChallengePromptRes = await CommandTriggers.restartChallenge(ctx));
+bot.command(BotCommands.RestartChallenge, async (ctx) => startChallengePromptRes = await CommandTriggers.restartChallenge(ctx));
 bot.command(BotCommands.Join, async (ctx) => await CommandTriggers.joinChallenge(ctx));
 bot.command(BotCommands.Read, async (ctx) => pagesReadPromptRes = await CommandTriggers.read(ctx));
 bot.command(BotCommands.Read2, async (ctx) => pagesReadPromptRes = await CommandTriggers.read(ctx));
