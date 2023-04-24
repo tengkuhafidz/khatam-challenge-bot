@@ -22,7 +22,6 @@ const saveKhatamChallengeDetails = async (chatId: string, khatamDate: string) =>
     }
 }
 
-
 const saveParticipantDetails = async (chatId: string, userName: string, userId: string, pagesRead: number) => {
     try {
         const dbRef = doc(db, "groups", chatId)

@@ -1,5 +1,6 @@
 export enum BotCommands {
     StartChallenge = "start_khatam_challenge",
+    RestartChallenge = "restart_khatam_challenge",
     Join = "join_khatam_challenge",
     Read = "read_quran_pages",
     Read2 = "add_pages_read",
@@ -8,13 +9,13 @@ export enum BotCommands {
     EditKhatamPages = "edit_khatam_pages",
     EditKhatamDate = "edit_khatam_date",
     ViewKhatamProgress = "view_khatam_progress"
-    // RestartChallenge = "restart_khatam_challenge"
     // SetTimezone = "set_timezone",
     // SetReminder = "set_khatam_reminder"
 }
 
 export const commandDescriptions = {
     [BotCommands.StartChallenge]: "Start khatam challenge for the group",
+    [BotCommands.RestartChallenge]: "Restart challenge - users will need to rejoin",
     [BotCommands.Join]: "Join khatam challenge",
     [BotCommands.Read]: "Add the number of pages you just read",
     [BotCommands.Read2]: "Add the number of pages you just read",

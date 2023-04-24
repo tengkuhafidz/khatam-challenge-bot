@@ -5,10 +5,12 @@ import { howItWorks } from "./howItWorks.ts";
 import { editKhatamPages, saveKhatamPages } from "./editKhatamPages.ts";
 import { editKhatamDate, saveKhatamDate } from "./editKhatamDate.ts";
 import { saveKhatamChallengeDetails, startChallenge } from "./startChallenge.ts";
+import { restartChallenge } from "./restartChallenge.ts";
 import { viewKhatamProgress } from "./viewKhatamProgress.ts";
 
 export const CommandTriggers = {
     startChallenge,
+    restartChallenge,
     joinChallenge,
     read,
     updateTotalPages,
