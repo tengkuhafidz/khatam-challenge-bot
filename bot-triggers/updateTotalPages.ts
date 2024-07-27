@@ -11,8 +11,7 @@ import { getKhatamPlannerUrl } from "../utils/getKhatamPlannerUrl.ts";
 import { getRandom } from "../utils/getRandom.ts";
 import { hasJoinedChallenge, hasStartedChallenge, noChallengeErrorResponse, notParticipantErrorResponse } from "../utils/vaildations.ts";
 
-let groupDetails: any;
-
+let initialTotalPagesRead: number;
 
 export const updateCurrentPage = async (ctx: Context) => {
     const ctxDetails = new CtxDetails(ctx)
@@ -29,6 +28,8 @@ export const updateCurrentPage = async (ctx: Context) => {
         await notParticipantErrorResponse(ctx)
         return null
     }
+
+    initialTotalPagesRead = groupDetails?.participants[userId!]?.pagesRead!
 
     const pagesReadPrompt = await ctx.reply(`Which page did you complete reading, ${userName}?`, {
         reply_markup: { force_reply: true },
@@ -67,13 +68,14 @@ Please ensure that your pages read value is a valid number.
         return
     }
 
-    const initialTotalPagesRead = groupDetails?.participants[userId!]?.pagesRead!
-    const newTotalPagesRead = getNewTotalPagesRead(initialTotalPagesRead, newCurrentPage, groupDetails.khatamPages)
+    const { khatamPages, khatamDate, participants } = await DbQueries.getGroupDetails(chatId!)
+
+    const newTotalPagesRead = getNewTotalPagesRead(initialTotalPagesRead, newCurrentPage, khatamPages)
     await DbQueries.saveTotalPagesRead(chatId!, userId!, newTotalPagesRead)
 
-    const { participants: updatedParticipants } = await DbQueries.getGroupDetails(chatId!)
+    participants[userId!].pagesRead = newTotalPagesRead;
 
-    await displayProgressMessages(ctx, groupDetails.khatamDate, newTotalPagesRead, updatedParticipants, groupDetails.khatamPages)
+    await displayProgressMessages(ctx, khatamDate, newTotalPagesRead, participants, khatamPages)
 }
 
 const getNewTotalPagesRead = (initialTotalPagesRead: number, newCurrentPage: number, khatamPages: number) => {
