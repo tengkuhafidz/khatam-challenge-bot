@@ -74,7 +74,7 @@ Please ensure that your pages read value is a valid number.
     await DbQueries.saveTotalPagesRead(chatId!, userId!, newTotalPagesRead)
 
     const { pagesRead: totalPagesRead } = participants[userId!]
-    await displayProgressMessages(ctx, khatamDate, totalPagesRead, participants, khatamPages)
+    await displayProgressMessages(ctx, khatamDate, newTotalPagesRead, participants, khatamPages)
 }
 
 const getNewTotalPagesRead = (initialTotalPagesRead: number, newCurrentPage: number, khatamPages: number) => {
