@@ -24,9 +24,7 @@ ${constructKhatamGoalText(khatamDate, khatamPages)}
 }
 
 export const constructKhatamGoalText = (khatamDate: string, khatamPages: number) => {
-    console.log(">>> khatamDate", khatamDate)
     const daysLeft = calculateDaysLeft(khatamDate)
-    console.log(">>> daysLeft", daysLeft)
 
     return `To read ${khatamPages} pages by ${parseKhatamDate(khatamDate).format('DD MMMM YYYY')} <i>(${constructDaysLeftText(daysLeft)})</i>`
 }
@@ -82,10 +80,11 @@ const formatParticipantDetails = (participantDetails: ParticipantDetails, khatam
     const daysLeft = calculateDaysLeft(khatamDate)
     const khatamStars = "⭐️".repeat(numberOfKhatam)
     const toKhatamAgainPhrase = numberOfKhatam > 0 ? "to complete again" : ""
+    const currentPage = pagesRead - (numberOfKhatam * khatamPages)
 
     return `
 <b>${name} ${khatamStars}</b>
-✅ Have read ${pagesRead} pages (${calculatePercentageRead(pagesRead, khatamPages)})
-📈 To read <a href="${getKhatamPlannerUrl(daysLeft, pagesRead)}">${calculateDailyPages(khatamDate, pagesRead, khatamPages)} pages per day</a> ${toKhatamAgainPhrase}
+✅ Current page: ${pagesRead} (${calculatePercentageRead(currentPage, khatamPages)})
+📈 To read <a href="${getKhatamPlannerUrl(daysLeft, currentPage)}">${calculateDailyPages(khatamDate, currentPage, khatamPages)} pages per day</a> ${toKhatamAgainPhrase}
 `
 }

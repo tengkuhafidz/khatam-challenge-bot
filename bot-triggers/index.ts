@@ -1,6 +1,6 @@
 import { joinChallenge } from "./joinChallenge.ts";
 import { read, savePagesReadIncrement } from "./read.ts";
-import { updateTotalPages, saveTotalPagesRead } from "./updateTotalPages.ts";
+import { updateCurrentPage, saveTotalPagesRead } from "./updateTotalPages.ts";
 import { howItWorks } from "./howItWorks.ts";
 import { editKhatamPages, saveKhatamPages } from "./editKhatamPages.ts";
 import { editKhatamDate, saveKhatamDate } from "./editKhatamDate.ts";
@@ -13,7 +13,7 @@ export const CommandTriggers = {
     restartChallenge,
     joinChallenge,
     read,
-    updateTotalPages,
+    updateCurrentPage,
     howItWorks,
     editKhatamPages,
     editKhatamDate,
