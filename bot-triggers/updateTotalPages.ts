@@ -31,7 +31,7 @@ export const updateCurrentPage = async (ctx: Context) => {
 
     initialTotalPagesRead = groupDetails?.participants[userId!]?.pagesRead!
 
-    const pagesReadPrompt = await ctx.reply(`Which page did you complete reading?, ${userName}?`, {
+    const pagesReadPrompt = await ctx.reply(`Which page did you complete reading, ${userName}?`, {
         reply_markup: { force_reply: true },
     });
 
@@ -81,8 +81,8 @@ const getNewTotalPagesRead = (initialTotalPagesRead: number, newCurrentPage: num
     const numberOfKhatam = calculateKhatamCount(initialTotalPagesRead, khatamPages)
     const initialCurrentPage = initialTotalPagesRead - (numberOfKhatam * khatamPages)
     return newCurrentPage >= initialCurrentPage ?
-        newCurrentPage - initialCurrentPage :
-        (khatamPages - initialCurrentPage) + newCurrentPage
+        (newCurrentPage - initialCurrentPage) + initialTotalPagesRead :
+        (khatamPages - initialCurrentPage) + newCurrentPage + initialTotalPagesRead
 }
 
 export const displayProgressMessages = async (ctx: Context, khatamDate: string, totalPagesRead: number, participants: Participants, khatamPages: number) => {

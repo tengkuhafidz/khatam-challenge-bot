@@ -58,7 +58,7 @@ export const displayParticipantsList = async (ctx: Context, khatamDate: string, 
 ${constructKhatamGoalText(khatamDate, khatamPages)}
 ${constructParticipantsList(participants, khatamDate, khatamPages)}
 🤖 Use /${BotCommands.Read2} to ${commandDescriptions[BotCommands.Read2].toLowerCase()}.
-🤖 Use /${BotCommands.UpdateTotal} to ${commandDescriptions[BotCommands.UpdateTotal].toLowerCase()}.
+🤖 Use /${BotCommands.UpdateCurrentPage} to ${commandDescriptions[BotCommands.UpdateCurrentPage].toLowerCase()}.
 `
     await ctx.reply(text, {
         parse_mode: "HTML",
