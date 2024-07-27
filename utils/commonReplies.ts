@@ -84,7 +84,7 @@ const formatParticipantDetails = (participantDetails: ParticipantDetails, khatam
 
     return `
 <b>${name} ${khatamStars}</b>
-✅ Current page: ${pagesRead} (${calculatePercentageRead(currentPage, khatamPages)})
+✅ Current page: ${currentPage} (${calculatePercentageRead(currentPage, khatamPages)})
 📈 To read <a href="${getKhatamPlannerUrl(daysLeft, currentPage)}">${calculateDailyPages(khatamDate, currentPage, khatamPages)} pages per day</a> ${toKhatamAgainPhrase}
 `
 }
