@@ -11,41 +11,25 @@ import { getKhatamPlannerUrl } from "../utils/getKhatamPlannerUrl.ts";
 import { getRandom } from "../utils/getRandom.ts";
 import { hasJoinedChallenge, hasStartedChallenge, noChallengeErrorResponse, notParticipantErrorResponse } from "../utils/vaildations.ts";
 
-let initialPagesRead: number;
-
 export const read = async (ctx: Context) => {
     const ctxDetails = new CtxDetails(ctx)
     const { userName, userId, chatId } = ctxDetails
 
-    console.log(`[read] command received — userId: ${userId}, userName: ${userName}, chatId: ${chatId}`)
-
     const groupDetails = await DbQueries.getGroupDetails(chatId!)
 
     if (!hasStartedChallenge(groupDetails!)) {
-        console.log(`[read] challenge not started for chatId: ${chatId}`)
         await noChallengeErrorResponse(ctx)
-        return null
+        return
     }
 
     if (!hasJoinedChallenge(groupDetails!, userId!)) {
-        console.log(`[read] userId ${userId} not found in participants. Keys: ${Object.keys(groupDetails?.participants || {})}`)
         await notParticipantErrorResponse(ctx)
-        return null
+        return
     }
 
-    initialPagesRead = groupDetails?.participants[userId!]?.pagesRead!
-    console.log(`[read] validation passed — chatId: ${chatId}, userId: ${userId}, participantKeys: ${Object.keys(groupDetails?.participants || {})}, initialPagesRead: ${initialPagesRead}`)
-
-    const pagesReadPrompt = await ctx.reply(`How many pages did you read, ${userName}?`, {
+    await ctx.reply(`How many pages did you read, ${userName}?`, {
         reply_markup: { force_reply: true },
     });
-
-    console.log(`[read] prompt sent — messageId: ${pagesReadPrompt?.message_id}`)
-
-    return {
-        userId: userId!,
-        messageId: pagesReadPrompt?.message_id
-    }
 }
 
 // =============================================================================
@@ -66,22 +50,24 @@ export const savePagesReadIncrement = async (ctx: Context) => {
         const replyText = `🚫 <b>Invalid Pages Read Value</b>
 Please ensure that your pages read value is a valid number.
 
-🤖 Use /${BotCommands.Read} to try again.`
+🤖 Use /${BotCommands.Read2} to try again.`
 
         await ctx.reply(replyText, {
             parse_mode: "HTML"
         });
-        // reply error message
         return
     }
+
+    const groupBeforeUpdate = await DbQueries.getGroupDetails(chatId!)
+    const initialPagesRead = groupBeforeUpdate?.participants[userId!]?.pagesRead ?? 0
 
     await DbQueries.savePagesReadIncrement(chatId!, userId!, inputPagesRead)
     const { khatamDate, participants, khatamPages } = await DbQueries.getGroupDetails(chatId!)
     const { pagesRead: totalPagesRead } = participants[userId!]
-    await displayProgressMessages(ctx, khatamDate, totalPagesRead, participants, khatamPages)
+    await displayProgressMessages(ctx, khatamDate, totalPagesRead, initialPagesRead, participants, khatamPages)
 }
 
-export const displayProgressMessages = async (ctx: Context, khatamDate: string, totalPagesRead: number, participants: Participants, khatamPages: number) => {
+export const displayProgressMessages = async (ctx: Context, khatamDate: string, totalPagesRead: number, initialPagesRead: number, participants: Participants, khatamPages: number) => {
     const hasNewKhatam = checkNewKhatam(initialPagesRead, totalPagesRead, khatamPages)
 
     if (hasNewKhatam) {

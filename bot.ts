@@ -2,7 +2,6 @@ import { Bot } from "https://deno.land/x/grammy@v1.12.0/mod.ts";
 import { CommandTriggers, ReplyTriggers } from "./bot-triggers/index.ts";
 import { appConfig } from "./configs/appConfig.ts";
 import { BotCommands, commandDescriptions } from "./constants/botCommands.ts";
-import { PromptRes } from "./types/index.ts";
 import { CtxDetails } from "./utils/CtxDetails.ts";
 
 export const bot = new Bot(appConfig.botApiKey);
@@ -17,22 +16,15 @@ bot.api.setMyCommands(
     }))
 )
 
-let startChallengePromptRes: PromptRes | null
-let pagesReadPromptRes: PromptRes | null
-let totalPagesPromptRes: PromptRes | null
-let khatamPagesPromptRes: PromptRes | null
-let editKhatamDatePromptRes: PromptRes | null
-
 bot.command("start", (ctx) => CommandTriggers.howItWorks(ctx));
 bot.command(BotCommands.HowItWorks, (ctx) => CommandTriggers.howItWorks(ctx));
-bot.command(BotCommands.StartChallenge, async (ctx) => startChallengePromptRes = await CommandTriggers.startChallenge(ctx));
-bot.command(BotCommands.RestartChallenge, async (ctx) => startChallengePromptRes = await CommandTriggers.restartChallenge(ctx));
+bot.command(BotCommands.StartChallenge, async (ctx) => await CommandTriggers.startChallenge(ctx));
+bot.command(BotCommands.RestartChallenge, async (ctx) => await CommandTriggers.restartChallenge(ctx));
 bot.command(BotCommands.Join, async (ctx) => await CommandTriggers.joinChallenge(ctx));
-// bot.command(BotCommands.Read, async (ctx) => pagesReadPromptRes = await CommandTriggers.read(ctx));
-bot.command(BotCommands.Read2, async (ctx) => pagesReadPromptRes = await CommandTriggers.read(ctx));
-bot.command(BotCommands.UpdateCurrentPage, async (ctx) => totalPagesPromptRes = await CommandTriggers.updateCurrentPage(ctx));
-bot.command(BotCommands.EditKhatamPages, async (ctx) => khatamPagesPromptRes = await CommandTriggers.editKhatamPages(ctx));
-bot.command(BotCommands.EditKhatamDate, async (ctx) => editKhatamDatePromptRes = await CommandTriggers.editKhatamDate(ctx));
+bot.command(BotCommands.Read2, async (ctx) => await CommandTriggers.read(ctx));
+bot.command(BotCommands.UpdateCurrentPage, async (ctx) => await CommandTriggers.updateCurrentPage(ctx));
+bot.command(BotCommands.EditKhatamPages, async (ctx) => await CommandTriggers.editKhatamPages(ctx));
+bot.command(BotCommands.EditKhatamDate, async (ctx) => await CommandTriggers.editKhatamDate(ctx));
 bot.command(BotCommands.ViewKhatamProgress, async (ctx) => await CommandTriggers.viewKhatamProgress(ctx));
 
 // =============================================================================
@@ -41,40 +33,40 @@ bot.command(BotCommands.ViewKhatamProgress, async (ctx) => await CommandTriggers
 
 bot.on("message", async (ctx) => {
     const ctxDetails = new CtxDetails(ctx)
-    const { chatId, userId } = ctxDetails
-    const replyToId = ctx.update?.message?.reply_to_message?.message_id
-    if (!replyToId) {
+    const { chatId } = ctxDetails
+    const replyToMessage = ctx.update?.message?.reply_to_message
+    if (!replyToMessage) {
         return
     }
 
-    console.log(`[message] reply received — userId: ${userId}, replyToId: ${replyToId}, pagesReadPromptRes: ${JSON.stringify(pagesReadPromptRes)}`)
+    const replyToText = replyToMessage.text || ""
+    const replyToId = replyToMessage.message_id
 
-    if (startChallengePromptRes?.messageId === replyToId) {
+    if (replyToText.startsWith("What is the khatam goal date?") || replyToText.includes("Restarting Challenge...")) {
         await ReplyTriggers.saveKhatamChallengeDetails(ctx)
         ctx.api.deleteMessage(chatId!, replyToId)
         return
     }
 
-    if (pagesReadPromptRes?.messageId === replyToId && pagesReadPromptRes?.userId === userId) {
-        console.log(`[message] pagesRead match — processing savePagesReadIncrement`)
+    if (replyToText.startsWith("How many pages did you read,")) {
         await ReplyTriggers.savePagesReadIncrement(ctx)
         ctx.api.deleteMessage(chatId!, replyToId)
         return
     }
 
-    if (totalPagesPromptRes?.messageId === replyToId && totalPagesPromptRes?.userId === userId) {
+    if (replyToText.startsWith("Which page did you complete reading,")) {
         await ReplyTriggers.saveTotalPagesRead(ctx)
         ctx.api.deleteMessage(chatId!, replyToId)
         return
     }
 
-    if (khatamPagesPromptRes?.messageId === replyToId) {
+    if (replyToText.startsWith("How many pages does this group aim to complete?")) {
         await ReplyTriggers.saveKhatamPages(ctx)
         ctx.api.deleteMessage(chatId!, replyToId)
         return
     }
 
-    if (editKhatamDatePromptRes?.messageId === replyToId) {
+    if (replyToText.startsWith("What is the new khatam goal date?")) {
         await ReplyTriggers.saveKhatamDate(ctx)
         ctx.api.deleteMessage(chatId!, replyToId)
         return
