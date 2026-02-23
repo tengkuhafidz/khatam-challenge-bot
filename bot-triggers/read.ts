@@ -34,7 +34,7 @@ export const read = async (ctx: Context) => {
     }
 
     initialPagesRead = groupDetails?.participants[userId!]?.pagesRead!
-    console.log(`[read] validation passed — initialPagesRead: ${initialPagesRead}, sending prompt`)
+    console.log(`[read] validation passed — chatId: ${chatId}, userId: ${userId}, participantKeys: ${Object.keys(groupDetails?.participants || {})}, initialPagesRead: ${initialPagesRead}`)
 
     const pagesReadPrompt = await ctx.reply(`How many pages did you read, ${userName}?`, {
         reply_markup: { force_reply: true },
