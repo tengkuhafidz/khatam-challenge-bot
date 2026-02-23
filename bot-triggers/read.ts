@@ -17,23 +17,30 @@ export const read = async (ctx: Context) => {
     const ctxDetails = new CtxDetails(ctx)
     const { userName, userId, chatId } = ctxDetails
 
+    console.log(`[read] command received — userId: ${userId}, userName: ${userName}, chatId: ${chatId}`)
+
     const groupDetails = await DbQueries.getGroupDetails(chatId!)
 
     if (!hasStartedChallenge(groupDetails!)) {
+        console.log(`[read] challenge not started for chatId: ${chatId}`)
         await noChallengeErrorResponse(ctx)
         return null
     }
 
     if (!hasJoinedChallenge(groupDetails!, userId!)) {
+        console.log(`[read] userId ${userId} not found in participants. Keys: ${Object.keys(groupDetails?.participants || {})}`)
         await notParticipantErrorResponse(ctx)
         return null
     }
 
     initialPagesRead = groupDetails?.participants[userId!]?.pagesRead!
+    console.log(`[read] validation passed — initialPagesRead: ${initialPagesRead}, sending prompt`)
 
     const pagesReadPrompt = await ctx.reply(`How many pages did you read, ${userName}?`, {
         reply_markup: { force_reply: true },
     });
+
+    console.log(`[read] prompt sent — messageId: ${pagesReadPrompt?.message_id}`)
 
     return {
         userId: userId!,

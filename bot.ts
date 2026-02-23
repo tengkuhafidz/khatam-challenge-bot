@@ -47,6 +47,8 @@ bot.on("message", async (ctx) => {
         return
     }
 
+    console.log(`[message] reply received — userId: ${userId}, replyToId: ${replyToId}, pagesReadPromptRes: ${JSON.stringify(pagesReadPromptRes)}`)
+
     if (startChallengePromptRes?.messageId === replyToId) {
         await ReplyTriggers.saveKhatamChallengeDetails(ctx)
         ctx.api.deleteMessage(chatId!, replyToId)
@@ -54,6 +56,7 @@ bot.on("message", async (ctx) => {
     }
 
     if (pagesReadPromptRes?.messageId === replyToId && pagesReadPromptRes?.userId === userId) {
+        console.log(`[message] pagesRead match — processing savePagesReadIncrement`)
         await ReplyTriggers.savePagesReadIncrement(ctx)
         ctx.api.deleteMessage(chatId!, replyToId)
         return
